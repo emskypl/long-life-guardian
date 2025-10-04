@@ -1,4 +1,5 @@
 using System;
+using Domain;
 
 namespace Persistence;
 
@@ -8,7 +9,7 @@ public class DbInitializer
     {
         if (context.Activities.Any()) return;
 
-        var activities = new List<Model.Activity>
+        var activities = new List<Activity>
         {
             new() {
                 Title = "Past Activity 1",

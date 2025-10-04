@@ -1,6 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
-using Model;
+using Domain;
 
 namespace Persistence;
 
