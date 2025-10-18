@@ -17,46 +17,44 @@ namespace Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
 
-            modelBuilder.Entity("Model.Activity", b =>
+            modelBuilder.Entity("Domain.DietDay", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Category")
+                    b.Property<string>("Breakfast")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CaloriesActual")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CaloriesTarget")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Dinner")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsCancelled")
+                    b.Property<bool>("IsCompleted")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Latitude")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("REAL");
-
-                    b.Property<string>("Title")
+                    b.Property<string>("Lunch")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Venue")
-                        .IsRequired()
+                    b.Property<string>("Notes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Snacks")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Activities");
+                    b.ToTable("DietDays");
                 });
 #pragma warning restore 612, 618
         }

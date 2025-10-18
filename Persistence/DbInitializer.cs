@@ -7,119 +7,123 @@ public class DbInitializer
 {
     public static async Task SeedData(AppDbContext context)
     {
-        if (context.Activities.Any()) return;
+        if (context.DietDays.Any()) return;
 
-        var activities = new List<Activity>
+        var dietDays = new List<DietDay>
         {
             new() {
-                Title = "Past Activity 1",
-                Date = DateTime.Now.AddMonths(-2),
-                Description = "Activity 2 months ago",
-                Category = "drinks",
-                City = "London",
-                Venue = "The Lamb and Flag, 33, Rose Street, Seven Dials, Covent Garden, London, Greater London, England, WC2E 9EB, United Kingdom",
-                Latitude = 51.51171665,
-                Longitude = -0.1256611057818921,
+                Date = DateTime.Today.AddDays(-7),
+                Breakfast = "Oatmeal with berries and almonds",
+                Lunch = "Grilled chicken salad with quinoa",
+                Dinner = "Baked salmon with roasted vegetables",
+                Snacks = "Greek yogurt with honey",
+                CaloriesTarget = 2000,
+                CaloriesActual = 1950,
+                Notes = "Felt energetic throughout the day",
+                IsCompleted = true
             },
             new() {
-                Title = "Past Activity 2",
-                Date = DateTime.Now.AddMonths(-1),
-                Description = "Activity 1 month ago",
-                Category = "culture",
-                City = "Paris",
-                Venue = "Louvre Museum, Rue Saint-Honoré, Quartier du Palais Royal, 1st Arrondissement, Paris, Ile-de-France, Metropolitan France, 75001, France",
-                Latitude = 48.8611473,
-                Longitude = 2.33802768704666
+                Date = DateTime.Today.AddDays(-6),
+                Breakfast = "Avocado toast with eggs",
+                Lunch = "Turkey and vegetable wrap",
+                Dinner = "Lean beef stir-fry with brown rice",
+                Snacks = "Apple with peanut butter",
+                CaloriesTarget = 2000,
+                CaloriesActual = 2100,
+                Notes = "Had a small dessert after dinner",
+                IsCompleted = true
             },
             new() {
-                Title = "Future Activity 1",
-                Date = DateTime.Now.AddMonths(1),
-                Description = "Activity 1 month in future",
-                Category = "culture",
-                City = "London",
-                Venue = "Natural History Museum",
-                Latitude = 51.496510900000004,
-                Longitude = -0.17600190725447445
+                Date = DateTime.Today.AddDays(-5),
+                Breakfast = "Smoothie bowl with protein powder",
+                Lunch = "Lentil soup with whole grain bread",
+                Dinner = "Grilled fish tacos with salsa",
+                Snacks = "Mixed nuts and dried fruit",
+                CaloriesTarget = 2000,
+                CaloriesActual = 1900,
+                Notes = "Skipped evening snack",
+                IsCompleted = true
             },
             new() {
-                Title = "Future Activity 2",
-                Date = DateTime.Now.AddMonths(2),
-                Description = "Activity 2 months in future",
-                Category = "music",
-                City = "London",
-                Venue = "The O2",
-                Latitude = 51.502936649999995,
-                Longitude = 0.0032029278126681844
+                Date = DateTime.Today.AddDays(-4),
+                Breakfast = "Greek yogurt parfait with granola",
+                Lunch = "Quinoa Buddha bowl with chickpeas",
+                Dinner = "Chicken curry with cauliflower rice",
+                Snacks = "Carrot sticks with hummus",
+                CaloriesTarget = 2000,
+                CaloriesActual = 2050,
+                Notes = "Tried new curry recipe",
+                IsCompleted = true
             },
-            new()
-            {
-                Title = "Future Activity 3",
-                Date = DateTime.Now.AddMonths(3),
-                Description = "Activity 3 months in future",
-                Category = "drinks",
-                City = "London",
-                Venue = "The Mayflower",
-                Latitude = 51.501778,
-                Longitude = -0.053577
+            new() {
+                Date = DateTime.Today.AddDays(-3),
+                Breakfast = "Whole grain cereal with banana",
+                Lunch = "Grilled vegetable and cheese sandwich",
+                Dinner = "Pork tenderloin with sweet potato",
+                Snacks = "Dark chocolate square",
+                CaloriesTarget = 2000,
+                CaloriesActual = 1850,
+                Notes = "Light dinner, wasn't very hungry",
+                IsCompleted = true
             },
-            new()
-            {
-                Title = "Future Activity 4",
-                Date = DateTime.Now.AddMonths(4),
-                Description = "Activity 4 months in future",
-                Category = "drinks",
-                City = "London",
-                Venue = "The Blackfriar",
-                Latitude = 51.512146650000005,
-                Longitude = -0.10364680647106028
+            new() {
+                Date = DateTime.Today.AddDays(-2),
+                Breakfast = "Scrambled eggs with spinach and toast",
+                Lunch = "Asian chicken salad with sesame dressing",
+                Dinner = "Vegetarian pasta with marinara sauce",
+                Snacks = "Trail mix",
+                CaloriesTarget = 2000,
+                CaloriesActual = 2150,
+                Notes = "Weekend meal prep helped a lot",
+                IsCompleted = true
             },
-            new()
-            {
-                Title = "Future Activity 5",
-                Date = DateTime.Now.AddMonths(5),
-                Description = "Activity 5 months in future",
-                Category = "culture",
-                City = "London",
-                Venue = "Sherlock Holmes Museum, 221b, Baker Street, Marylebone, London, Greater London, England, NW1 6XE, United Kingdom",
-                Latitude = 51.5237629,
-                Longitude = -0.1584743
+            new() {
+                Date = DateTime.Today.AddDays(-1),
+                Breakfast = "Protein pancakes with berries",
+                Lunch = "Mediterranean bowl with falafel",
+                Dinner = "Grilled steak with asparagus",
+                Snacks = "Protein shake",
+                CaloriesTarget = 2000,
+                CaloriesActual = 2000,
+                Notes = "Perfect calorie target hit!",
+                IsCompleted = true
             },
-            new()
-            {
-                Title = "Future Activity 6",
-                Date = DateTime.Now.AddMonths(6),
-                Description = "Activity 6 months in future",
-                Category = "music",
-                City = "London",
-                Venue = "Roundhouse, Chalk Farm Road, Maitland Park, Chalk Farm, London Borough of Camden, London, Greater London, England, NW1 8EH, United Kingdom",
-                Latitude = 51.5432505,
-                Longitude = -0.15197608174931165
+            new() {
+                Date = DateTime.Today,
+                Breakfast = "Chia seed pudding with mango",
+                Lunch = "Tuna salad with whole grain crackers",
+                Dinner = "Herb-crusted chicken with quinoa",
+                Snacks = "Banana with almond butter",
+                CaloriesTarget = 2000,
+                CaloriesActual = 1200,
+                Notes = "Still working on dinner",
+                IsCompleted = false
             },
-            new()
-            {
-                Title = "Future Activity 7",
-                Date = DateTime.Now.AddMonths(7),
-                Description = "Activity 2 months ago",
-                Category = "travel",
-                City = "London",
-                Venue = "River Thames, England, United Kingdom",
-                Latitude = 51.5575525,
-                Longitude = -0.781404
+            new() {
+                Date = DateTime.Today.AddDays(1),
+                Breakfast = "Green smoothie with spinach and protein",
+                Lunch = "Grilled chicken and vegetable skewers",
+                Dinner = "Baked cod with lemon and herbs",
+                Snacks = "Cottage cheese with cucumber",
+                CaloriesTarget = 2000,
+                CaloriesActual = 0,
+                Notes = "Meal prep planned for tomorrow",
+                IsCompleted = false
             },
-            new()
-            {
-                Title = "Future Activity 8",
-                Date = DateTime.Now.AddMonths(8),
-                Description = "Activity 8 months in future",
-                Category = "film",
-                City = "London",
-                Venue = "River Thames, England, United Kingdom",
-                Latitude = 51.5575525,
-                Longitude = -0.781404
+            new() {
+                Date = DateTime.Today.AddDays(2),
+                Breakfast = "Steel-cut oats with cinnamon and apple",
+                Lunch = "Black bean and quinoa power bowl",
+                Dinner = "Turkey meatballs with zucchini noodles",
+                Snacks = "Greek yogurt with berries",
+                CaloriesTarget = 2000,
+                CaloriesActual = 0,
+                Notes = "Planning to try new zucchini noodle recipe",
+                IsCompleted = false
             }
         };
 
-        context.Activities.AddRange(activities);
+        context.DietDays.AddRange(dietDays);
         await context.SaveChangesAsync();
     }
 }

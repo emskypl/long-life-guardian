@@ -4,7 +4,7 @@ using Persistence;
 
 namespace Application.Activities.Commands;
 
-public class DeleteActivity
+public class DeleteDietDay
 {
     public class Command : IRequest
     {
@@ -15,9 +15,9 @@ public class DeleteActivity
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            var activity = await context.Activities.FindAsync([request.Id], cancellationToken) ?? throw new Exception("Cannot find activity");
+            var dietDay = await context.DietDays.FindAsync([request.Id], cancellationToken) ?? throw new Exception("Cannot find diet day");
 
-            context.Remove(activity);
+            context.Remove(dietDay);
 
             await context.SaveChangesAsync(cancellationToken);
         }

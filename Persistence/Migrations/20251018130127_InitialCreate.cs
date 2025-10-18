@@ -12,23 +12,23 @@ namespace Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Activities",
+                name: "DietDays",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
-                    Category = table.Column<string>(type: "TEXT", nullable: false),
-                    IsCancelled = table.Column<bool>(type: "INTEGER", nullable: false),
-                    City = table.Column<string>(type: "TEXT", nullable: false),
-                    Venue = table.Column<string>(type: "TEXT", nullable: false),
-                    Latitude = table.Column<double>(type: "REAL", nullable: false),
-                    Longitude = table.Column<double>(type: "REAL", nullable: false)
+                    Breakfast = table.Column<string>(type: "TEXT", nullable: false),
+                    Lunch = table.Column<string>(type: "TEXT", nullable: false),
+                    Dinner = table.Column<string>(type: "TEXT", nullable: false),
+                    Snacks = table.Column<string>(type: "TEXT", nullable: true),
+                    CaloriesTarget = table.Column<int>(type: "INTEGER", nullable: false),
+                    CaloriesActual = table.Column<int>(type: "INTEGER", nullable: false),
+                    Notes = table.Column<string>(type: "TEXT", nullable: true),
+                    IsCompleted = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Activities", x => x.Id);
+                    table.PrimaryKey("PK_DietDays", x => x.Id);
                 });
         }
 
@@ -36,7 +36,7 @@ namespace Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Activities");
+                name: "DietDays");
         }
     }
 }
