@@ -1,12 +1,12 @@
-type Activity = {
+type DietDay = {
 	id: string
-	title: string
 	date: string
-	description: string
-	category: string
-	isCancelled: boolean
-	city: string
-	venue: string
-	latitude: number
-	longitude: number
+	breakfast: string
+	lunch: string
+	dinner: string
+	snacks: string
+	caloriesTarget: number
+	caloriesActual: number
+	notes: string
+	isCompleted: boolean
 }

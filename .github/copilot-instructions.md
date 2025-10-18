@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-This is a **Clean Architecture** health/activity tracking application with:
+This is a **Clean Architecture** health/diet tracking application with:
 
 - **.NET 9 Web API** backend using **Entity Framework Core SQLite**
 - **React 19 + TypeScript + Vite** frontend with Material-UI
@@ -11,7 +11,7 @@ This is a **Clean Architecture** health/activity tracking application with:
 
 ### Project Structure
 
-- `Domain/` - Core entities (e.g., `Activity.cs`)
+- `Domain/` - Core entities (e.g., `DietDay.cs`)
 - `Application/` - Business logic with Commands/Queries pattern
 - `Persistence/` - Data access with EF Core DbContext
 - `API/` - Controllers that delegate to MediatR handlers
@@ -21,16 +21,16 @@ This is a **Clean Architecture** health/activity tracking application with:
 
 ### Backend (C# .NET)
 
-- **MediatR CQRS**: Commands in `Application/Activities/Commands/`, Queries in `Application/Activities/Queries/`
+- **MediatR CQRS**: Commands in `Application/DietDays/Commands/`, Queries in `Application/DietDays/Queries/`
 - **Controller Pattern**: All controllers inherit from `BaseApiController` and use `Mediator.Send()`
 - **Primary Constructor Injection**: Use `Handler(AppDbContext context)` syntax
 - **Required Properties**: Domain entities use `required` keyword for mandatory fields
-- **String IDs**: Activities use `Guid.NewGuid().ToString()` for unique identifiers
+- **String IDs**: DietDays use `Guid.NewGuid().ToString()` for unique identifiers
 
 ### Frontend (React/TypeScript)
 
-- **Global Types**: Shared types in `client/src/lib/types/index.d.ts` (note: global `Activity` type)
-- **API Integration**: Axios calls to `https://localhost:5002/api/activities`
+- **Global Types**: Shared types in `client/src/lib/types/index.d.ts` (note: global `DietDay` type)
+- **API Integration**: Axios calls to `https://localhost:5002/api/dietdays`
 - **Material-UI Components**: Uses `@mui/material` for UI components
 
 ## Development Workflows
@@ -48,23 +48,24 @@ npm run dev
 ### Database Management
 
 - **SQLite** database with EF Core migrations in `Persistence/Migrations/`
-- **Seeding**: `DbInitializer.SeedData()` creates sample activities with real venues/coordinates
+- **Seeding**: `DbInitializer.SeedData()` creates sample diet days with realistic meal plans and calorie tracking
 - **Auto-migration**: `Program.cs` runs migrations on startup
 
 ### Adding New Features
 
 1. **Domain**: Add/modify entities in `Domain/`
-2. **Application**: Create Command/Query handlers in `Application/Activities/`
+2. **Application**: Create Command/Query handlers in `Application/DietDays/`
 3. **API**: Add controller actions that delegate to MediatR
 4. **Client**: Update TypeScript types and React components
 
 ## Project-Specific Details
 
-### Activity Entity Structure
+### DietDay Entity Structure
 
-- Location-aware with `City`, `Venue`, `Latitude`, `Longitude`
-- Categories: "drinks", "culture", "music", "travel", "film"
-- Uses `IsCancelled` boolean for soft deletion pattern
+- Date-based meal tracking with `Breakfast`, `Lunch`, `Dinner`, `Snacks`
+- Calorie tracking with `CaloriesTarget` and `CaloriesActual` integers
+- Progress tracking with `IsCompleted` boolean and optional `Notes`
+- Uses string IDs with `Guid.NewGuid().ToString()` pattern
 
 ### API Configuration
 
@@ -81,7 +82,7 @@ npm run dev
 ## Important Files to Reference
 
 - `API/Controllers/BaseApiController.cs` - Controller base pattern
-- `Application/Activities/Queries/GetActivityList.cs` - CQRS query example
-- `Domain/Activity.cs` - Core entity structure
+- `Application/DietDays/Queries/GetDietDayList.cs` - CQRS query example
+- `Domain/DietDay.cs` - Core entity structure
 - `client/src/lib/types/index.d.ts` - Shared TypeScript definitions
 - `Persistence/DbInitializer.cs` - Sample data structure
