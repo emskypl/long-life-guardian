@@ -1,9 +1,11 @@
-import { List, ListItem, ListItemText, Typography } from '@mui/material'
+import { Box, Container, CssBaseline } from '@mui/material'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import NavBar from './NavBar'
+import DietDaysDashboard from '../../features/dietDays/dashboard/DietDayDashboard'
 
 function App() {
-	const [dietdays, setDietDays] = useState<DietDay[]>([])
+	const [dietDays, setDietDays] = useState<DietDay[]>([])
 
 	useEffect(() => {
 		axios
@@ -13,16 +15,15 @@ function App() {
 	}, [])
 
 	return (
-		<>
-			<Typography variant='h3'>Health App</Typography>
-			<List>
-				{dietdays.map(dietday => (
-					<ListItem key={dietday.id}>
-						<ListItemText>{dietday.breakfast}</ListItemText>
-					</ListItem>
-				))}
-			</List>
-		</>
+		<Box sx={{ bgcolor: '#eeeeee' }}>
+			<CssBaseline />
+			<NavBar />
+			<Container
+				maxWidth='xl'
+				sx={{ mt: 3 }}>
+				<DietDaysDashboard dietDays={dietDays} />
+			</Container>
+		</Box>
 	)
 }
 
