@@ -2,9 +2,11 @@ import { Box, Button, Card, CardActions, CardContent, Chip, Typography } from '@
 
 type Props = {
 	dietDay: DietDay
+	selectDietDay: (id: string) => void
+	closeForm: () => void
 }
 
-export default function DietDayCard({ dietDay }: Props) {
+export default function DietDayCard({ dietDay, selectDietDay, closeForm }: Props) {
 	return (
 		<Card>
 			<CardContent>
@@ -23,6 +25,10 @@ export default function DietDayCard({ dietDay }: Props) {
 					variant='outlined'
 				/>
 				<Button
+					onClick={() => {
+						selectDietDay(dietDay.id)
+						closeForm()
+					}}
 					size='medium'
 					variant='contained'>
 					View

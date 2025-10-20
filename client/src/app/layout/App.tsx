@@ -6,6 +6,8 @@ import DietDaysDashboard from '../../features/dietDays/dashboard/DietDayDashboar
 
 function App() {
 	const [dietDays, setDietDays] = useState<DietDay[]>([])
+	const [selectedDietDay, setSelectedDietDay] = useState<DietDay | undefined>(undefined)
+	const [editMode, setEditMode] = useState(false)
 
 	useEffect(() => {
 		axios
@@ -14,14 +16,40 @@ function App() {
 			.catch(error => console.error('Error fetching diet days:', error))
 	}, [])
 
+	const handleSelectDietDay = (id: string) => {
+		setSelectedDietDay(dietDays.find(x => x.id === id))
+	}
+
+	const handleCancelSelectDietDay = () => {
+		setSelectedDietDay(undefined)
+	}
+
+	const handleOpenForm = (id?: string) => {
+		if (id) handleSelectDietDay(id)
+		else handleCancelSelectDietDay()
+		setEditMode(true)
+	}
+
+	const handleFormClose = () => {
+		setEditMode(false)
+	}
+
 	return (
 		<Box sx={{ bgcolor: '#eeeeee' }}>
 			<CssBaseline />
-			<NavBar />
+			<NavBar openForm={handleOpenForm} />
 			<Container
 				maxWidth='xl'
 				sx={{ mt: 3 }}>
-				<DietDaysDashboard dietDays={dietDays} />
+				<DietDaysDashboard
+					dietDays={dietDays}
+					cancelSelectedDietDay={handleCancelSelectDietDay}
+					selectDietDay={handleSelectDietDay}
+					selectedDietDay={selectedDietDay}
+					editMode={editMode}
+					openForm={handleOpenForm}
+					closeForm={handleFormClose}
+				/>
 			</Container>
 		</Box>
 	)

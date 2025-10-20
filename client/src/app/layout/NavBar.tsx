@@ -1,7 +1,11 @@
 import { Group } from '@mui/icons-material'
 import { Box, AppBar, Toolbar, Typography, Button, MenuItem, Container } from '@mui/material'
 
-export default function NavBar() {
+type Props = {
+	openForm: () => void
+}
+
+export default function NavBar({ openForm }: Props) {
 	return (
 		<Box sx={{ flexGrow: 1 }}>
 			<AppBar
@@ -27,7 +31,8 @@ export default function NavBar() {
 						<Button
 							size='large'
 							variant='contained'
-							color='warning'>
+							color='warning'
+							onClick={openForm}>
 							Create diet
 						</Button>
 					</Toolbar>
