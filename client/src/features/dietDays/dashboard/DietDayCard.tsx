@@ -4,9 +4,10 @@ type Props = {
 	dietDay: DietDay
 	selectDietDay: (id: string) => void
 	closeForm: () => void
+	deleteDietDay: (id: string) => void
 }
 
-export default function DietDayCard({ dietDay, selectDietDay, closeForm }: Props) {
+export default function DietDayCard({ dietDay, selectDietDay, closeForm, deleteDietDay }: Props) {
 	return (
 		<Card>
 			<CardContent>
@@ -24,15 +25,29 @@ export default function DietDayCard({ dietDay, selectDietDay, closeForm }: Props
 					label={dietDay.caloriesActual}
 					variant='outlined'
 				/>
-				<Button
-					onClick={() => {
-						selectDietDay(dietDay.id)
-						closeForm()
-					}}
-					size='medium'
-					variant='contained'>
-					View
-				</Button>
+				<Box
+					display={'flex'}
+					gap={1}>
+					<Button
+						onClick={() => {
+							selectDietDay(dietDay.id)
+							closeForm()
+						}}
+						size='medium'
+						variant='contained'>
+						View
+					</Button>
+					<Button
+						onClick={() => {
+							deleteDietDay(dietDay.id)
+							closeForm()
+						}}
+						size='medium'
+						color='error'
+						variant='contained'>
+						Delete
+					</Button>
+				</Box>
 			</CardActions>
 		</Card>
 	)

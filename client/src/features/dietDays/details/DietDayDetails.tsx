@@ -7,6 +7,7 @@ type Props = {
 
 export default function DietDayDetails({ dietDay, cancelSelectActivity, openForm }: Props) {
 	return (
+		
 		<Card>
 			<CardMedia
 				component='img'

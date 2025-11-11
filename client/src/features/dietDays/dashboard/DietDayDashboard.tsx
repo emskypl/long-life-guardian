@@ -11,9 +11,11 @@ type Props = {
 	openForm: (id: string) => void
 	closeForm: () => void
 	editMode: boolean
+	submitForm: (dietDay: DietDay) => void
+	deleteDietDay: (id: string) => void
 }
 
-export default function DietDaysDashboard({ dietDays, selectedDietDay, cancelSelectedDietDay, selectDietDay, openForm, closeForm, editMode }: Props) {
+export default function DietDaysDashboard({ dietDays, selectedDietDay, cancelSelectedDietDay, selectDietDay, openForm, closeForm, editMode, submitForm, deleteDietDay }: Props) {
 	return (
 		<Grid
 			container
@@ -23,6 +25,7 @@ export default function DietDaysDashboard({ dietDays, selectedDietDay, cancelSel
 					dietDays={dietDays}
 					selectDietDay={selectDietDay}
 					closeForm={closeForm}
+					deleteDietDay={deleteDietDay}
 				/>
 			</Grid>
 			<Grid size={5}>
@@ -37,6 +40,7 @@ export default function DietDaysDashboard({ dietDays, selectedDietDay, cancelSel
 					<DietDayForm
 						dietDay={selectedDietDay}
 						closeForm={closeForm}
+						submitForm={submitForm}
 					/>
 				)}
 			</Grid>

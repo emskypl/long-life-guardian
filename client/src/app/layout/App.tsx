@@ -34,6 +34,21 @@ function App() {
 		setEditMode(false)
 	}
 
+	const handleSubmitForm = (dietDay: DietDay) => {
+		if (dietDay.id) {
+			setDietDays(dietDays.map(x => (x.id == dietDay.id ? dietDay : x)))
+		} else {
+			const newDietDay = { ...dietDay, id: dietDays.length.toString() }
+			setSelectedDietDay(newDietDay)
+			setDietDays([...dietDays, newDietDay])
+		}
+		setEditMode(false)
+	}
+
+	const handleDelete = (id: string) => {
+		setDietDays(dietDays.filter(x => x.id !== id))
+	}
+
 	return (
 		<Box sx={{ bgcolor: '#eeeeee' }}>
 			<CssBaseline />
@@ -49,6 +64,8 @@ function App() {
 					editMode={editMode}
 					openForm={handleOpenForm}
 					closeForm={handleFormClose}
+					submitForm={handleSubmitForm}
+					deleteDietDay={handleDelete}
 				/>
 			</Container>
 		</Box>
