@@ -32,7 +32,7 @@ export default function DietDaysDashboard({ dietDays, selectedDietDay, cancelSel
 				{selectedDietDay && !editMode && (
 					<DietDayDetails
 						dietDay={selectedDietDay}
-						cancelSelectActivity={cancelSelectedDietDay}
+						cancelSelectDietDay={cancelSelectedDietDay}
 						openForm={openForm}
 					/>
 				)}

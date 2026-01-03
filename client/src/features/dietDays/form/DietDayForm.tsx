@@ -13,14 +13,14 @@ export default function DietDayForm({ dietDay, closeForm, submitForm }: Props) {
 
 		const formData = new FormData(event.currentTarget)
 
-		const data: { [key: string]: FormDataEntryValue } = {}
+		const formValues: { [key: string]: FormDataEntryValue } = {}
 		formData.forEach((value, key) => {
-			data[key] = value
+			formValues[key] = value
 		})
 
-		if (dietDay) data.id = dietDay.id
+		if (dietDay) formValues.id = dietDay.id
 
-		submitForm(data as unknown as DietDay)
+		submitForm(formValues as unknown as DietDay)
 	}
 
 	return (

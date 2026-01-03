@@ -1,11 +1,11 @@
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material'
 type Props = {
 	dietDay: DietDay
-	cancelSelectActivity: () => void
+	cancelSelectDietDay: () => void
 	openForm: (id: string) => void
 }
 
-export default function DietDayDetails({ dietDay, cancelSelectActivity, openForm }: Props) {
+export default function DietDayDetails({ dietDay, cancelSelectDietDay, openForm }: Props) {
 	return (
 		
 		<Card>
@@ -25,7 +25,7 @@ export default function DietDayDetails({ dietDay, cancelSelectActivity, openForm
 					Edit
 				</Button>
 				<Button
-					onClick={cancelSelectActivity}
+					onClick={cancelSelectDietDay}
 					color='inherit'>
 					Cancel
 				</Button>
