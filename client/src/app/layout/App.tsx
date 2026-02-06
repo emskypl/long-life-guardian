@@ -17,7 +17,7 @@ function App() {
 	}, [])
 
 	const handleSelectDietDay = (id: string) => {
-		setSelectedDietDay(dietDays.find(x => x.id === id))
+		setSelectedDietDay(dietDays.find(dietDay => dietDay.id === id))
 	}
 
 	const handleCancelSelectDietDay = () => {
@@ -36,7 +36,7 @@ function App() {
 
 	const handleSubmitForm = (dietDay: DietDay) => {
 		if (dietDay.id) {
-			setDietDays(dietDays.map(x => (x.id == dietDay.id ? dietDay : x)))
+			setDietDays(dietDays.map(existingDietDay => (existingDietDay.id == dietDay.id ? dietDay : existingDietDay)))
 		} else {
 			const newDietDay = { ...dietDay, id: dietDays.length.toString() }
 			setSelectedDietDay(newDietDay)
@@ -46,7 +46,7 @@ function App() {
 	}
 
 	const handleDelete = (id: string) => {
-		setDietDays(dietDays.filter(x => x.id !== id))
+		setDietDays(dietDays.filter(dietDay => dietDay.id !== id))
 	}
 
 	return (

@@ -17,7 +17,7 @@ public class GetDietDayDetails
         public async Task<DietDay> Handle(Query request, CancellationToken cancellationToken)
         {
             var dietDay = await context.DietDays.FindAsync([request.Id], cancellationToken);
-            return dietDay ?? throw new Exception("Activity not found");
+            return dietDay ?? throw new Exception("Diet day not found");
         }
     }
 

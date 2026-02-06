@@ -20,21 +20,21 @@ public class DietDaysController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<ActionResult<string>> CreateDietDay(DietDay diet)
+    public async Task<ActionResult<string>> CreateDietDay(DietDay dietDay)
     {
-        return await Mediator.Send(new CreateDietDay.Command { DietDay = diet });
+        return await Mediator.Send(new CreateDietDay.Command { DietDay = dietDay });
     }
 
     [HttpPut]
-    public async Task<ActionResult> EditDietDay(DietDay diet)
+    public async Task<ActionResult> EditDietDay(DietDay dietDay)
     {
-        await Mediator.Send(new EditDietDay.Command { DietDay = diet });
+        await Mediator.Send(new EditDietDay.Command { DietDay = dietDay });
 
         return NoContent();
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteDiet(string id)
+    public async Task<ActionResult> DeleteDietDay(string id)
     {
         await Mediator.Send(new DeleteDietDay.Command { Id = id });
 
