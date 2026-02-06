@@ -1,11 +1,12 @@
-using Application.Activities.Commands;
-using Application.Activities.Queries;
+using Application.Diets.Commands;
+using Application.Diets.Queries;
 using Domain.Diets;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-public class DietDaysController : BaseApiController
+public class DietDaysController(IMediator mediator) : BaseApiController(mediator)
 {
     [HttpGet]
     public async Task<ActionResult<List<DietDay>>> GetDietDays()

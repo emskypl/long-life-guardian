@@ -1,9 +1,11 @@
 using System;
+using Application.Common.Exceptions;
 using Domain.Diets;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-namespace Application.Activities.Queries;
+namespace Application.Diets.Queries;
 
 public class GetDietDayDetails
 {
@@ -16,8 +18,19 @@ public class GetDietDayDetails
     {
         public async Task<DietDay> Handle(Query request, CancellationToken cancellationToken)
         {
-            var dietDay = await context.DietDays.FindAsync([request.Id], cancellationToken);
-            return dietDay ?? throw new Exception("Diet day not found");
+            var dietDay = await context.DietDays
+                .Include(d => d.Breakfast).ThenInclude(m => m!.Products)
+                .Include(d => d.Lunch).ThenInclude(m => m!.Products)
+                .Include(d => d.Dinner).ThenInclude(m => m!.Products)
+                .Include(d => d.Snacks).ThenInclude(m => m!.Products)
+                .FirstOrDefaultAsync(d => d.Id == request.Id, cancellationToken);
+            
+            if (dietDay == null)
+            {
+                throw new NotFoundException(nameof(DietDay), request.Id);
+            }
+            
+            return dietDay;
         }
     }
 

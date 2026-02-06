@@ -3,7 +3,7 @@ using Domain.Diets;
 using MediatR;
 using Persistence;
 
-namespace Application.Activities.Commands;
+namespace Application.Diets.Commands;
 
 public class CreateDietDay
 {
