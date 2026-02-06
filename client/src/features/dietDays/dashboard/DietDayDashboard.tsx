@@ -1,7 +1,7 @@
-import { Grid } from '@mui/material'
-import DietDayList from './DietDayList'
+import { Grid as Grid } from '@mui/material'
 import DietDayDetails from '../details/DietDayDetails'
 import DietDayForm from '../form/DietDayForm'
+import MealsTable from './MealsTable'
 
 type Props = {
 	dietDays: DietDay[]
@@ -17,33 +17,34 @@ type Props = {
 
 export default function DietDaysDashboard({ dietDays, selectedDietDay, cancelSelectedDietDay, selectDietDay, openForm, closeForm, editMode, submitForm, deleteDietDay }: Props) {
 	return (
-		<Grid
-			container
-			spacing={3}>
-			<Grid size={7}>
-				<DietDayList
-					dietDays={dietDays}
-					selectDietDay={selectDietDay}
-					closeForm={closeForm}
-					deleteDietDay={deleteDietDay}
-				/>
-			</Grid>
-			<Grid size={5}>
-				{selectedDietDay && !editMode && (
-					<DietDayDetails
-						dietDay={selectedDietDay}
-						cancelSelectActivity={cancelSelectedDietDay}
+		<>
+			{editMode && (
+				<Grid
+					container
+					spacing={{ xs: 2, sm: 3 }}
+					sx={{ mb: { xs: 2, sm: 3 } }}>
+					<Grid size={{ xs: 12 }}>
+						<DietDayForm
+							dietDay={selectedDietDay}
+							closeForm={closeForm}
+							submitForm={submitForm}
+						/>
+					</Grid>
+				</Grid>
+			)}
+			<Grid
+				container
+				spacing={{ xs: 2, sm: 3 }}>
+				<Grid size={{ xs: 12 }}>
+					<MealsTable
+						dietDays={dietDays}
+						selectDietDay={selectDietDay}
+						cancelSelectedDietDay={cancelSelectedDietDay}
+						deleteDietDay={deleteDietDay}
 						openForm={openForm}
 					/>
-				)}
-				{editMode && (
-					<DietDayForm
-						dietDay={selectedDietDay}
-						closeForm={closeForm}
-						submitForm={submitForm}
-					/>
-				)}
+				</Grid>
 			</Grid>
-		</Grid>
+		</>
 	)
 }

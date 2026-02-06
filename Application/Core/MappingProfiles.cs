@@ -1,6 +1,6 @@
 using System;
 using AutoMapper;
-using Domain;
+using Domain.Diets;
 
 namespace Application.Core;
 

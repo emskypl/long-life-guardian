@@ -1,6 +1,6 @@
 using System;
 using AutoMapper;
-using Domain;
+using Domain.Diets;
 using MediatR;
 using Persistence;
 

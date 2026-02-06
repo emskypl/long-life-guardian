@@ -50,12 +50,12 @@ function App() {
 	}
 
 	return (
-		<Box sx={{ bgcolor: '#eeeeee' }}>
+		<Box sx={{ bgcolor: '#eeeeee', minHeight: '100dvh' }}>
 			<CssBaseline />
 			<NavBar openForm={handleOpenForm} />
 			<Container
 				maxWidth='xl'
-				sx={{ mt: 3 }}>
+				sx={{ mt: 3, mb: 3, minHeight: '80dvh' }}>
 				<DietDaysDashboard
 					dietDays={dietDays}
 					cancelSelectedDietDay={handleCancelSelectDietDay}

@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardContent, CardMedia, Typography } from '@mui/material'
+import { Button, Card, CardActions, CardContent, Typography } from '@mui/material'
 type Props = {
 	dietDay: DietDay
 	cancelSelectActivity: () => void
@@ -7,18 +7,13 @@ type Props = {
 
 export default function DietDayDetails({ dietDay, cancelSelectActivity, openForm }: Props) {
 	return (
-		
 		<Card>
-			<CardMedia
-				component='img'
-				src={`/images/culture.jpg`}
-			/>
 			<CardContent>
-				<Typography variant='h5'>{dietDay.breakfast}</Typography>
-				<Typography variant='subtitle1'>{dietDay.date}</Typography>
+				<Typography variant='h5'>{dietDay.breakfast.name}</Typography>
 				<Typography variant='body1'>{dietDay.notes}</Typography>
+				<Typography variant='body2'>Products: {dietDay.breakfast.products.map(product => product.name).join(', ')}</Typography>
 			</CardContent>
-			<CardActions>
+			{/* <CardActions>
 				<Button
 					onClick={() => openForm(dietDay.id)}
 					color='primary'>
@@ -29,7 +24,7 @@ export default function DietDayDetails({ dietDay, cancelSelectActivity, openForm
 					color='inherit'>
 					Cancel
 				</Button>
-			</CardActions>
+			</CardActions> */}
 		</Card>
 	)
 }

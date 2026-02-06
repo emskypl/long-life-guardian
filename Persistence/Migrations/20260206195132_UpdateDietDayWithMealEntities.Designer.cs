@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,14 +11,16 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260206195132_UpdateDietDayWithMealEntities")]
+    partial class UpdateDietDayWithMealEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
 
-            modelBuilder.Entity("Domain.Diets.DietDay", b =>
+            modelBuilder.Entity("Domain.DietDay", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -25,10 +28,10 @@ namespace Persistence.Migrations
                     b.Property<string>("BreakfastId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CaloriesTarget")
+                    b.Property<int>("CaloriesActual")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CarbsTarget")
+                    b.Property<int>("CaloriesTarget")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
@@ -37,17 +40,11 @@ namespace Persistence.Migrations
                     b.Property<string>("DinnerId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("FatTarget")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("LunchId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Notes")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("ProteinTarget")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("SnacksId")
                         .HasColumnType("TEXT");
@@ -65,21 +62,7 @@ namespace Persistence.Migrations
                     b.ToTable("DietDays");
                 });
 
-            modelBuilder.Entity("Domain.Diets.Meal", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Meals");
-                });
-
-            modelBuilder.Entity("Domain.Diets.Product", b =>
+            modelBuilder.Entity("Domain.Meal", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -93,9 +76,6 @@ namespace Persistence.Migrations
                     b.Property<int>("Fat")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("MealId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -105,26 +85,24 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MealId");
-
-                    b.ToTable("Products");
+                    b.ToTable("Meals");
                 });
 
-            modelBuilder.Entity("Domain.Diets.DietDay", b =>
+            modelBuilder.Entity("Domain.DietDay", b =>
                 {
-                    b.HasOne("Domain.Diets.Meal", "Breakfast")
+                    b.HasOne("Domain.Meal", "Breakfast")
                         .WithMany()
                         .HasForeignKey("BreakfastId");
 
-                    b.HasOne("Domain.Diets.Meal", "Dinner")
+                    b.HasOne("Domain.Meal", "Dinner")
                         .WithMany()
                         .HasForeignKey("DinnerId");
 
-                    b.HasOne("Domain.Diets.Meal", "Lunch")
+                    b.HasOne("Domain.Meal", "Lunch")
                         .WithMany()
                         .HasForeignKey("LunchId");
 
-                    b.HasOne("Domain.Diets.Meal", "Snacks")
+                    b.HasOne("Domain.Meal", "Snacks")
                         .WithMany()
                         .HasForeignKey("SnacksId");
 
@@ -135,18 +113,6 @@ namespace Persistence.Migrations
                     b.Navigation("Lunch");
 
                     b.Navigation("Snacks");
-                });
-
-            modelBuilder.Entity("Domain.Diets.Product", b =>
-                {
-                    b.HasOne("Domain.Diets.Meal", null)
-                        .WithMany("Products")
-                        .HasForeignKey("MealId");
-                });
-
-            modelBuilder.Entity("Domain.Diets.Meal", b =>
-                {
-                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

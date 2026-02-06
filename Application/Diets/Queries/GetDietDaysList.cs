@@ -1,5 +1,5 @@
 using System;
-using Domain;
+using Domain.Diets;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -14,7 +14,11 @@ public class GetDietDaysList
     {
         public async Task<List<DietDay>> Handle(Query request, CancellationToken cancellationToken)
         {
-            return await context.DietDays.ToListAsync(cancellationToken);
+            return await context.DietDays.Include(d => d.Breakfast).ThenInclude(m => m.Products)
+                .Include(d => d.Lunch).ThenInclude(m => m.Products)
+                .Include(d => d.Dinner).ThenInclude(m => m.Products)
+                .Include(d => d.Snacks).ThenInclude(m => m.Products)
+            .ToListAsync(cancellationToken);
         }
     }
 }
