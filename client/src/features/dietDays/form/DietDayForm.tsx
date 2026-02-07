@@ -24,7 +24,7 @@ export default function DietDayForm({ dietDay, closeForm, submitForm }: Props) {
 	}
 
 	return (
-		<Paper sx={{ borderRadius: 3, padding: 3 }}>
+		<Paper sx={{ borderRadius: 5, padding: 2 }}>
 			<Typography
 				variant='h5'
 				gutterBottom
@@ -36,39 +36,60 @@ export default function DietDayForm({ dietDay, closeForm, submitForm }: Props) {
 				onSubmit={handleSubmit}
 				display='flex'
 				flexDirection='column'
-				gap={3}>
-				<TextField
-					name='caloriesTarget'
-					label='Calories Target'
-					defaultValue={dietDay?.caloriesTarget}
-				/>
-				<TextField
-					name='notes'
-					label='Notes'
-					multiline
-					rows={3}
-					defaultValue={dietDay?.notes}
-				/>
-				<TextField
-					name='date'
-					label='Date'
-					type='date'
-					defaultValue={dietDay?.date}
-				/>
+				sx={{ width: '100%' }}
+				gap={2}>
+				<Box
+					display='flex'
+					flexDirection={{ xs: 'column', sm: 'row' }}
+					gap={2}>
+					<TextField
+						name='caloriesTarget'
+						label='Calories Target'
+						defaultValue={dietDay?.caloriesTarget}
+						size='small'
+					/>
+					<TextField
+						name='proteinTarget'
+						label='Protein Target'
+						defaultValue={dietDay?.proteinTarget}
+						size='small'
+					/>
+					<TextField
+						name='carbsTarget'
+						label='Carbs Target'
+						defaultValue={dietDay?.carbsTarget}
+						size='small'
+					/>
+					<TextField
+						name='fatTarget'
+						label='Fat Target'
+						defaultValue={dietDay?.fatTarget}
+						size='small'
+					/>
+				</Box>
 				<TextField
 					name='breakfast'
 					label='Breakfast'
-					defaultValue={dietDay?.breakfast}
+					defaultValue={dietDay?.breakfast?.name}
+					size='small'
 				/>
 				<TextField
 					name='lunch'
 					label='Lunch'
-					defaultValue={dietDay?.lunch}
+					defaultValue={dietDay?.lunch?.name}
+					size='small'
 				/>
 				<TextField
 					name='dinner'
 					label='Dinner'
-					defaultValue={dietDay?.dinner}
+					defaultValue={dietDay?.dinner?.name}
+					size='small'
+				/>
+				<TextField
+					name='snacks'
+					label='Snacks'
+					defaultValue={dietDay?.snacks?.name}
+					size='small'
 				/>
 				<Box
 					display={'flex'}

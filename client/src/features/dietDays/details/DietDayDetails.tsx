@@ -1,16 +1,15 @@
 import { Box, Card, TableContainer, Typography } from '@mui/material'
 import DietDayDetailsTable from './DietDayDetailsTable'
 import { BarChart } from '@mui/x-charts/BarChart'
-import { pieArcLabelClasses, PieChart } from '@mui/x-charts/PieChart'
-import type { DefaultizedPieValueType } from '@mui/x-charts/models'
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge'
 type Props = {
 	dietDay: DietDay
 }
 
 export default function DietDayDetails({ dietDay }: Props) {
-	const uData = [dietDay.carbsTarget, dietDay.proteinTarget, dietDay.fatTarget]
-	const pData = [
+	const barChartTargetData = [dietDay.carbsTarget, dietDay.proteinTarget, dietDay.fatTarget]
+
+	const barChartCurrentData = [
 		dietDay.breakfast.products.reduce((acc, product) => acc + product.carbs, 0) +
 			dietDay.lunch.products.reduce((acc, product) => acc + product.carbs, 0) +
 			dietDay.dinner.products.reduce((acc, product) => acc + product.carbs, 0) +
@@ -25,25 +24,20 @@ export default function DietDayDetails({ dietDay }: Props) {
 			dietDay.snacks.products.reduce((acc, product) => acc + product.fat, 0),
 	]
 
-	const pDataCalories =
+	const barChartLabels = ['Carbs', 'Protein', 'Fat']
+
+	const gaugeChartData =
 		dietDay.breakfast.products.reduce((acc, product) => acc + product.calories, 0) +
 		dietDay.lunch.products.reduce((acc, product) => acc + product.calories, 0) +
 		dietDay.dinner.products.reduce((acc, product) => acc + product.calories, 0) +
 		dietDay.snacks.products.reduce((acc, product) => acc + product.calories, 0)
 
-	const data = [
-		{ label: 'Target calories', value: dietDay.caloriesTarget, color: '#0088FE' },
-		{ label: 'Missing calories', value: pDataCalories, color: '#00C49F' },
-	]
-	const settings = {
+	const gaugeChartSettings = {
 		width: 200,
 		height: 200,
-		value: (pDataCalories / dietDay.caloriesTarget) * 100,
+		value: (gaugeChartData / dietDay.caloriesTarget) * 100,
 	}
 
-	const TOTAL = data.map(item => item.value).reduce((a, b) => a + b, 0)
-
-	const xLabels = ['Carbs', 'Protein', 'Fat']
 	return (
 		<>
 			<TableContainer
@@ -71,17 +65,17 @@ export default function DietDayDetails({ dietDay }: Props) {
 					<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: { xs: '100%', md: '100%' }, height: 300 }}>
 						<Typography variant='h6'>Calories</Typography>
 						<Gauge
-							{...settings}
+							{...gaugeChartSettings}
 							cornerRadius='50%'
-							value={settings.value > 100 ? 100 : settings.value}
+							value={gaugeChartSettings.value > 100 ? 100 : gaugeChartSettings.value}
 							valueMax={100}
-							text={`${pDataCalories}/${dietDay.caloriesTarget}`}
+							text={`${gaugeChartData}/${dietDay.caloriesTarget}`}
 							sx={theme => ({
 								[`& .${gaugeClasses.valueText}`]: {
 									fontSize: 25,
 								},
 								[`& .${gaugeClasses.valueArc}`]: {
-									fill: settings.value > 100 ? '#ff0000' : '#52b202',
+									fill: gaugeChartSettings.value > 100 ? '#ff0000' : '#52b202',
 								},
 								[`& .${gaugeClasses.referenceArc}`]: {
 									fill: theme.palette.text.disabled,
@@ -92,10 +86,10 @@ export default function DietDayDetails({ dietDay }: Props) {
 					<Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: { xs: '100%', md: '100%' }, height: 300 }}>
 						<BarChart
 							series={[
-								{ data: pData, label: 'Current', id: 'pvId', stack: '	total' },
-								{ data: uData, label: 'Target', id: 'uvId', stack: 'total' },
+								{ data: barChartCurrentData, label: 'Current', id: 'pvId', stack: '	total' },
+								{ data: barChartTargetData, label: 'Target', id: 'uvId', stack: 'total' },
 							]}
-							xAxis={[{ data: xLabels, height: 28 }]}
+							xAxis={[{ data: barChartLabels, height: 28 }]}
 							yAxis={[{ width: 50 }]}
 						/>
 					</Box>
