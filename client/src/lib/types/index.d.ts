@@ -9,15 +9,11 @@ type DietDay = {
 	carbsTarget: number
 	fatTarget: number
 	caloriesTarget: number
-	notes: string
 }
 
 type Meal = {
 	id: string
 	name: string
-	carbs: number
-	protein: number
-	fat: number
 	products: Product[]
 }
 

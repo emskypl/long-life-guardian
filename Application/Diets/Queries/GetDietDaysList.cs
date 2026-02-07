@@ -14,10 +14,11 @@ public class GetDietDaysList
     {
         public async Task<List<DietDay>> Handle(Query request, CancellationToken cancellationToken)
         {
-            return await context.DietDays.Include(d => d.Breakfast).ThenInclude(m => m.Products)
-                .Include(d => d.Lunch).ThenInclude(m => m.Products)
-                .Include(d => d.Dinner).ThenInclude(m => m.Products)
-                .Include(d => d.Snacks).ThenInclude(m => m.Products)
+            return await context.DietDays.Include(d => d.Breakfast).ThenInclude(m => m!.Products)
+                .Include(d => d.Lunch).ThenInclude(m => m!.Products)
+                .Include(d => d.Dinner).ThenInclude(m => m!.Products)
+                .Include(d => d.Snacks).ThenInclude(m => m!.Products)
+                .OrderByDescending(d => d.Date)
             .ToListAsync(cancellationToken);
         }
     }

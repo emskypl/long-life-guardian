@@ -160,21 +160,33 @@ export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDiet
 											<Typography
 												variant='body2'
 												color='text.secondary'>
-												{dietDay.breakfast.carbs + dietDay.lunch.carbs + dietDay.dinner.carbs + dietDay.snacks.carbs}
+												{dietDay.breakfast.products.reduce((acc, product) => acc + product.carbs, 0) +
+													dietDay.lunch.products.reduce((acc, product) => acc + product.carbs, 0) +
+													dietDay.dinner.products.reduce((acc, product) => acc + product.carbs, 0) +
+													dietDay.snacks.products.reduce((acc, product) => acc + product.carbs, 0)}{' '}
+												/ {dietDay.carbsTarget}
 											</Typography>
 										</TableCell>
 										<TableCell align='center'>
 											<Typography
 												variant='body2'
 												color='text.secondary'>
-												{dietDay.breakfast.protein + dietDay.lunch.protein + dietDay.dinner.protein + dietDay.snacks.protein}
+												{dietDay.breakfast.products.reduce((acc, product) => acc + product.protein, 0) +
+													dietDay.lunch.products.reduce((acc, product) => acc + product.protein, 0) +
+													dietDay.dinner.products.reduce((acc, product) => acc + product.protein, 0) +
+													dietDay.snacks.products.reduce((acc, product) => acc + product.protein, 0)}{' '}
+												/ {dietDay.proteinTarget}
 											</Typography>
 										</TableCell>
 										<TableCell align='center'>
 											<Typography
 												variant='body2'
 												color='text.secondary'>
-												{dietDay.breakfast.fat + dietDay.lunch.fat + dietDay.dinner.fat + dietDay.snacks.fat}
+												{dietDay.breakfast.products.reduce((acc, product) => acc + product.fat, 0) +
+													dietDay.lunch.products.reduce((acc, product) => acc + product.fat, 0) +
+													dietDay.dinner.products.reduce((acc, product) => acc + product.fat, 0) +
+													dietDay.snacks.products.reduce((acc, product) => acc + product.fat, 0)}{' '}
+												/ {dietDay.fatTarget}
 											</Typography>
 										</TableCell>
 									</>
@@ -184,7 +196,11 @@ export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDiet
 										variant='body2'
 										color='text.secondary'
 										sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-										{dietDay.breakfast.calories + dietDay.lunch.calories + dietDay.dinner.calories + dietDay.snacks.calories} / {dietDay.caloriesTarget}
+										{dietDay.breakfast.products.reduce((acc, product) => acc + product.calories, 0) +
+											dietDay.lunch.products.reduce((acc, product) => acc + product.calories, 0) +
+											dietDay.dinner.products.reduce((acc, product) => acc + product.calories, 0) +
+											dietDay.snacks.products.reduce((acc, product) => acc + product.calories, 0)}{' '}
+										/ {dietDay.caloriesTarget}
 									</Typography>
 								</TableCell>
 							</TableRow>
@@ -197,14 +213,7 @@ export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDiet
 										timeout='auto'
 										unmountOnExit>
 										<Box sx={{ margin: 2 }}>
-											<DietDayDetails
-												dietDay={dietDay}
-												cancelSelectActivity={() => {
-													setExpandedRow(null)
-													cancelSelectedDietDay()
-												}}
-												openForm={openForm}
-											/>
+											<DietDayDetails dietDay={dietDay} />
 										</Box>
 									</Collapse>
 								</TableCell>
