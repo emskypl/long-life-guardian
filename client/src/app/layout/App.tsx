@@ -12,23 +12,43 @@ function App() {
 	const [editMode, setEditMode] = useState(false)
 	const [page, setPage] = useState(0)
 	const [rowsPerPage, setRowsPerPage] = useState(7)
-	const [isAuthenticated, setIsAuthenticated] = useState(false)
+	const [user, setUser] = useState<User | null>(null)
 	const [activeTab, setActiveTab] = useState<'diets' | 'exercise'>('diets')
+	const [showLoginForm, setShowLoginForm] = useState(false)
 	const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
 		open: false,
 		message: '',
 		severity: 'success',
 	})
 
+	// Check for existing user in localStorage on mount
 	useEffect(() => {
-		axios
-			.get<DietDay[]>('https://localhost:5002/api/dietdays')
-			.then(response => setDietDays(response.data))
-			.catch(error => {
-				console.error('Error fetching diet days:', error)
-				setSnackbar({ open: true, message: 'Failed to fetch diet days', severity: 'error' })
-			})
+		const storedUser = localStorage.getItem('user')
+		if (storedUser) {
+			try {
+				const parsedUser = JSON.parse(storedUser)
+				setUser(parsedUser)
+				// Set axios default authorization header
+				axios.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`
+			} catch (error) {
+				console.error('Error parsing stored user:', error)
+				localStorage.removeItem('user')
+			}
+		}
 	}, [])
+
+	// Fetch diet days when user is authenticated
+	useEffect(() => {
+		if (user) {
+			axios
+				.get<DietDay[]>('https://localhost:5002/api/dietdays')
+				.then(response => setDietDays(response.data))
+				.catch(error => {
+					console.error('Error fetching diet days:', error)
+					setSnackbar({ open: true, message: 'Failed to fetch diet days', severity: 'error' })
+				})
+		}
+	}, [user])
 
 	const handleOpenForm = () => {
 		setEditMode(true)
@@ -46,19 +66,47 @@ function App() {
 		setSnackbar({ ...snackbar, open: false })
 	}
 
-	const handleLogin = () => {
-		setIsAuthenticated(true)
+	const handleLoginSuccess = (userData: User) => {
+		setUser(userData)
+		// Store user in localStorage for persistence
+		localStorage.setItem('user', JSON.stringify(userData))
+		// Set axios default authorization header
+		axios.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`
+		showSnackbar(`Welcome, ${userData.username}!`, 'success')
+		// Reset login form state
+		setShowLoginForm(false)
 	}
 
 	const handleLogout = () => {
-		setIsAuthenticated(false)
+		setUser(null)
 		setEditMode(false)
 		setActiveTab('diets')
+		setDietDays([])
+		setShowLoginForm(false)
+		// Clear user from localStorage
+		localStorage.removeItem('user')
+		// Remove authorization header
+		delete axios.defaults.headers.common['Authorization']
+		showSnackbar('Logged out successfully', 'success')
 	}
 
 	const handleTabChange = (tab: 'diets' | 'exercise') => {
 		setActiveTab(tab)
 		setEditMode(false)
+	}
+
+	const handleShowLoginForm = () => {
+		setShowLoginForm(true)
+	}
+
+	const handleGoHome = () => {
+		if (!user) {
+			// If not logged in, go back to landing page (hide login form)
+			setShowLoginForm(false)
+		} else {
+			// If logged in, go to diets tab
+			handleTabChange('diets')
+		}
 	}
 
 	const ensureValidDietDay = (dietDay: DietDay, isUpdate: boolean): Partial<DietDay> => {
@@ -167,17 +215,23 @@ function App() {
 		<Box sx={{ bgcolor: '#eeeeee', minHeight: '100dvh' }}>
 			<CssBaseline />
 			<NavBar
-				isAuthenticated={isAuthenticated}
+				isAuthenticated={!!user}
 				activeTab={activeTab}
 				onTabChange={handleTabChange}
-				onLogin={handleLogin}
+				onLogin={handleShowLoginForm}
 				onLogout={handleLogout}
+				onGoHome={handleGoHome}
+				showLoginForm={showLoginForm}
 			/>
 			<Container
 				maxWidth='xl'
 				sx={{ mt: 3, mb: 3, minHeight: '80dvh' }}>
-				{!isAuthenticated ? (
-					<LandingPage onLogin={handleLogin} />
+				{!user ? (
+					<LandingPage
+						onLoginSuccess={handleLoginSuccess}
+						showLoginFormProp={showLoginForm}
+						setShowLoginForm={setShowLoginForm}
+					/>
 				) : activeTab === 'diets' ? (
 					<DietDaysDashboard
 						dietDays={dietDays}

@@ -7,10 +7,14 @@ import App from './app/layout/App.tsx'
 const theme = createTheme({
 	palette: {
 		primary: {
-			main: '#1f6f5c', // Change this to your desired color
+			main: '#4caf50',
+			light: '#81c784',
+			dark: '#388e3c',
 		},
 		secondary: {
-			main: '#ff6f00', // Optional: customize secondary color
+			main: '#EFD81D',
+			light: '#fff176',
+			dark: '#c6a700',
 		},
 	},
 })

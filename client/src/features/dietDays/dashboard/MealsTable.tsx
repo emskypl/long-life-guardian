@@ -43,9 +43,9 @@ export default function MealsTable({ dietDays, openForm, page, rowsPerPage, onPa
 						<TableCell sx={{ width: 50 }}>
 							<Chip
 								label='Add'
-								color='primary'
 								size='medium'
 								onClick={() => openForm('')}
+								sx={{ backgroundColor: 'primary.dark', color: 'white', fontWeight: 'bold', cursor: 'pointer' }}
 							/>
 						</TableCell>
 						<TableCell>

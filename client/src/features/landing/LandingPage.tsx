@@ -1,13 +1,58 @@
-import { Box, Button, Container, Typography, Grid, Card, CardContent } from '@mui/material'
+import { useState, useEffect } from 'react'
+import { Box, Button, Container, Typography, Grid, Card, CardContent, Stack } from '@mui/material'
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
 import RestaurantIcon from '@mui/icons-material/Restaurant'
 import InsightsIcon from '@mui/icons-material/Insights'
+import LoginForm from './LoginForm'
 
 type Props = {
-	onLogin: () => void
+	onLoginSuccess: (user: User) => void
+	showLoginFormProp?: boolean
+	setShowLoginForm?: (show: boolean) => void
 }
 
-export default function LandingPage({ onLogin }: Props) {
+export default function LandingPage({ onLoginSuccess, showLoginFormProp = false, setShowLoginForm }: Props) {
+	const [showLoginForm, setShowLoginFormState] = useState(showLoginFormProp)
+	const [initialTab, setInitialTab] = useState<'login' | 'register'>('login')
+
+	// Update showLoginForm when prop changes
+	useEffect(() => {
+		if (showLoginFormProp) {
+			setShowLoginFormState(true)
+		} else {
+			setShowLoginFormState(false)
+		}
+	}, [showLoginFormProp])
+
+	const handleShowLogin = () => {
+		setInitialTab('login')
+		setShowLoginFormState(true)
+		if (setShowLoginForm) {
+			setShowLoginForm(true)
+		}
+	}
+
+	const handleShowRegister = () => {
+		setInitialTab('register')
+		setShowLoginFormState(true)
+		if (setShowLoginForm) {
+			setShowLoginForm(true)
+		}
+	}
+
+	if (showLoginForm) {
+		return (
+			<Box sx={{ minHeight: '80vh', display: 'flex', alignItems: 'center' }}>
+				<Container maxWidth='lg'>
+					<LoginForm
+						onLoginSuccess={onLoginSuccess}
+						initialTab={initialTab}
+					/>
+				</Container>
+			</Box>
+		)
+	}
+
 	return (
 		<Box sx={{ minHeight: '80vh', display: 'flex', alignItems: 'center' }}>
 			<Container maxWidth='lg'>
@@ -25,13 +70,23 @@ export default function LandingPage({ onLogin }: Props) {
 						sx={{ mb: 4, maxWidth: '800px', mx: 'auto' }}>
 						Track your nutrition, monitor your health, and achieve your wellness goals with our comprehensive diet tracking system
 					</Typography>
-					<Button
-						variant='contained'
-						size='large'
-						onClick={onLogin}
-						sx={{ px: 6, py: 2, fontSize: '1.1rem', borderRadius: 3 }}>
-						Get Started
-					</Button>
+					<Stack
+						direction='row'
+						spacing={2}
+						justifyContent='center'>
+						<Button
+							size='large'
+							onClick={handleShowLogin}
+							sx={{ px: 6, py: 2, fontSize: '1.1rem', borderRadius: 3, backgroundColor: 'primary.main', color: 'white', '&:hover': { backgroundColor: 'primary.dark' } }}>
+							Sign In
+						</Button>
+						<Button
+							size='large'
+							onClick={handleShowRegister}
+							sx={{ px: 6, py: 2, fontSize: '1.1rem', borderRadius: 3, backgroundColor: 'secondary.main', color: 'black', '&:hover': { backgroundColor: 'secondary.dark' } }}>
+							Sign Up
+						</Button>
+					</Stack>
 				</Box>
 
 				<Grid

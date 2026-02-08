@@ -25,3 +25,9 @@ type Product = {
 	carbs: number
 	fat: number
 }
+
+type User = {
+	username: string
+	token: string
+	email: string
+}

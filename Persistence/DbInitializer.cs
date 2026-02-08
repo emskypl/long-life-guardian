@@ -1,4 +1,6 @@
+using Domain.Core;
 using Domain.Diets;
+using Domain.Login;
 
 namespace Persistence;
 
@@ -165,7 +167,18 @@ public class DbInitializer
             }
         };
 
+        var user = new User 
+        { 
+            Id = "test-user-id", 
+            Login = "testuser", 
+            Password = PasswordHasher.HashPassword("password123"), 
+            Email = "testuser@example.com", 
+            Username = "Test User" 
+        };
+
         context.DietDays.AddRange(dietDays);
+        context.Users.Add(user);
+
         await context.SaveChangesAsync();
     }
 }
