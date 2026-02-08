@@ -1,19 +1,20 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Chip, useMediaQuery, useTheme, Collapse, Box, IconButton } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Chip, useMediaQuery, useTheme, Collapse, Box, IconButton, TablePagination } from '@mui/material'
 import { format } from 'date-fns'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import DietDayDetails from '../details/DietDayDetails'
 
 type Props = {
 	dietDays: DietDay[]
-	selectDietDay: (id: string) => void
-	cancelSelectedDietDay: () => void
-	deleteDietDay: (id: string) => void
 	openForm: (id: string) => void
+	page: number
+	rowsPerPage: number
+	onPageChange: (event: unknown, newPage: number) => void
+	onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDietDay, openForm }: Props) {
+export default function MealsTable({ dietDays, openForm, page, rowsPerPage, onPageChange, onRowsPerPageChange }: Props) {
 	const theme = useTheme()
 	const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 	const isTablet = useMediaQuery(theme.breakpoints.down('md'))
@@ -22,12 +23,13 @@ export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDiet
 	const handleRowClick = (id: string) => {
 		if (expandedRow === id) {
 			setExpandedRow(null)
-			cancelSelectedDietDay()
 		} else {
 			setExpandedRow(id)
-			selectDietDay(id)
 		}
 	}
+
+	// Paginate diet days
+	const paginatedDietDays = dietDays.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 
 	return (
 		<TableContainer
@@ -86,10 +88,9 @@ export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDiet
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{dietDays.map(dietDay => (
-						<>
+					{paginatedDietDays.map(dietDay => (
+						<Fragment key={dietDay.id}>
 							<TableRow
-								key={dietDay.id}
 								hover
 								onClick={() => handleRowClick(dietDay.id)}
 								sx={{
@@ -123,7 +124,7 @@ export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDiet
 												variant='body2'
 												noWrap
 												sx={{ maxWidth: { sm: 120, md: 150 } }}>
-												{dietDay.breakfast.name || '-'}
+												{dietDay?.breakfast?.name || '-'}
 											</Typography>
 										</TableCell>
 										<TableCell>
@@ -131,7 +132,7 @@ export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDiet
 												variant='body2'
 												noWrap
 												sx={{ maxWidth: { sm: 120, md: 150 } }}>
-												{dietDay.lunch.name || '-'}
+												{dietDay?.lunch?.name || '-'}
 											</Typography>
 										</TableCell>
 										<TableCell>
@@ -139,7 +140,7 @@ export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDiet
 												variant='body2'
 												noWrap
 												sx={{ maxWidth: { sm: 120, md: 150 } }}>
-												{dietDay.dinner.name || '-'}
+												{dietDay?.dinner?.name || '-'}
 											</Typography>
 										</TableCell>
 									</>
@@ -150,7 +151,7 @@ export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDiet
 											variant='body2'
 											noWrap
 											sx={{ maxWidth: 150 }}>
-											{dietDay.snacks.name || '-'}
+											{dietDay?.snacks?.name || '-'}
 										</Typography>
 									</TableCell>
 								)}
@@ -160,33 +161,33 @@ export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDiet
 											<Typography
 												variant='body2'
 												color='text.secondary'>
-												{dietDay.breakfast.products.reduce((acc, product) => acc + product.carbs, 0) +
-													dietDay.lunch.products.reduce((acc, product) => acc + product.carbs, 0) +
-													dietDay.dinner.products.reduce((acc, product) => acc + product.carbs, 0) +
-													dietDay.snacks.products.reduce((acc, product) => acc + product.carbs, 0)}{' '}
-												/ {dietDay.carbsTarget}
+												{dietDay?.breakfast?.products.reduce((acc, product) => acc + product.carbs, 0) +
+													dietDay?.lunch?.products.reduce((acc, product) => acc + product.carbs, 0) +
+													dietDay?.dinner?.products.reduce((acc, product) => acc + product.carbs, 0) +
+													dietDay?.snacks?.products.reduce((acc, product) => acc + product.carbs, 0)}{' '}
+												/ {dietDay?.carbsTarget}
 											</Typography>
 										</TableCell>
 										<TableCell align='center'>
 											<Typography
 												variant='body2'
 												color='text.secondary'>
-												{dietDay.breakfast.products.reduce((acc, product) => acc + product.protein, 0) +
-													dietDay.lunch.products.reduce((acc, product) => acc + product.protein, 0) +
-													dietDay.dinner.products.reduce((acc, product) => acc + product.protein, 0) +
-													dietDay.snacks.products.reduce((acc, product) => acc + product.protein, 0)}{' '}
-												/ {dietDay.proteinTarget}
+												{dietDay?.breakfast?.products.reduce((acc, product) => acc + product.protein, 0) +
+													dietDay?.lunch?.products.reduce((acc, product) => acc + product.protein, 0) +
+													dietDay?.dinner?.products.reduce((acc, product) => acc + product.protein, 0) +
+													dietDay?.snacks?.products.reduce((acc, product) => acc + product.protein, 0)}{' '}
+												/ {dietDay?.proteinTarget}
 											</Typography>
 										</TableCell>
 										<TableCell align='center'>
 											<Typography
 												variant='body2'
 												color='text.secondary'>
-												{dietDay.breakfast.products.reduce((acc, product) => acc + product.fat, 0) +
-													dietDay.lunch.products.reduce((acc, product) => acc + product.fat, 0) +
-													dietDay.dinner.products.reduce((acc, product) => acc + product.fat, 0) +
-													dietDay.snacks.products.reduce((acc, product) => acc + product.fat, 0)}{' '}
-												/ {dietDay.fatTarget}
+												{dietDay?.breakfast?.products.reduce((acc, product) => acc + product.fat, 0) +
+													dietDay?.lunch?.products.reduce((acc, product) => acc + product.fat, 0) +
+													dietDay?.dinner?.products.reduce((acc, product) => acc + product.fat, 0) +
+													dietDay?.snacks?.products.reduce((acc, product) => acc + product.fat, 0)}{' '}
+												/ {dietDay?.fatTarget}
 											</Typography>
 										</TableCell>
 									</>
@@ -196,11 +197,11 @@ export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDiet
 										variant='body2'
 										color='text.secondary'
 										sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-										{dietDay.breakfast.products.reduce((acc, product) => acc + product.calories, 0) +
-											dietDay.lunch.products.reduce((acc, product) => acc + product.calories, 0) +
-											dietDay.dinner.products.reduce((acc, product) => acc + product.calories, 0) +
-											dietDay.snacks.products.reduce((acc, product) => acc + product.calories, 0)}{' '}
-										/ {dietDay.caloriesTarget}
+										{dietDay?.breakfast?.products.reduce((acc, product) => acc + product.calories, 0) +
+											dietDay?.lunch?.products.reduce((acc, product) => acc + product.calories, 0) +
+											dietDay?.dinner?.products.reduce((acc, product) => acc + product.calories, 0) +
+											dietDay?.snacks?.products.reduce((acc, product) => acc + product.calories, 0)}{' '}
+										/ {dietDay?.caloriesTarget}
 									</Typography>
 								</TableCell>
 							</TableRow>
@@ -218,10 +219,19 @@ export default function MealsTable({ dietDays, selectDietDay, cancelSelectedDiet
 									</Collapse>
 								</TableCell>
 							</TableRow>
-						</>
+						</Fragment>
 					))}
 				</TableBody>
 			</Table>
+			<TablePagination
+				rowsPerPageOptions={[1, 3, 7, 14, 30]}
+				component='div'
+				count={dietDays.length}
+				rowsPerPage={rowsPerPage}
+				page={page}
+				onPageChange={onPageChange}
+				onRowsPerPageChange={onRowsPerPageChange}
+			/>
 		</TableContainer>
 	)
 }

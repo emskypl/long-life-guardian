@@ -10,27 +10,27 @@ export default function DietDayDetails({ dietDay }: Props) {
 	const barChartTargetData = [dietDay.carbsTarget, dietDay.proteinTarget, dietDay.fatTarget]
 
 	const barChartCurrentData = [
-		dietDay.breakfast.products.reduce((acc, product) => acc + product.carbs, 0) +
-			dietDay.lunch.products.reduce((acc, product) => acc + product.carbs, 0) +
-			dietDay.dinner.products.reduce((acc, product) => acc + product.carbs, 0) +
-			dietDay.snacks.products.reduce((acc, product) => acc + product.carbs, 0),
-		dietDay.breakfast.products.reduce((acc, product) => acc + product.protein, 0) +
-			dietDay.lunch.products.reduce((acc, product) => acc + product.protein, 0) +
-			dietDay.dinner.products.reduce((acc, product) => acc + product.protein, 0) +
-			dietDay.snacks.products.reduce((acc, product) => acc + product.protein, 0),
-		dietDay.breakfast.products.reduce((acc, product) => acc + product.fat, 0) +
-			dietDay.lunch.products.reduce((acc, product) => acc + product.fat, 0) +
-			dietDay.dinner.products.reduce((acc, product) => acc + product.fat, 0) +
-			dietDay.snacks.products.reduce((acc, product) => acc + product.fat, 0),
+		dietDay?.breakfast?.products.reduce((acc, product) => acc + product.carbs, 0) +
+			dietDay?.lunch?.products.reduce((acc, product) => acc + product.carbs, 0) +
+			dietDay?.dinner?.products.reduce((acc, product) => acc + product.carbs, 0) +
+			dietDay?.snacks?.products.reduce((acc, product) => acc + product.carbs, 0),
+		dietDay?.breakfast?.products.reduce((acc, product) => acc + product.protein, 0) +
+			dietDay?.lunch?.products.reduce((acc, product) => acc + product.protein, 0) +
+			dietDay?.dinner?.products.reduce((acc, product) => acc + product.protein, 0) +
+			dietDay?.snacks?.products.reduce((acc, product) => acc + product.protein, 0),
+		dietDay?.breakfast?.products.reduce((acc, product) => acc + product.fat, 0) +
+			dietDay?.lunch?.products.reduce((acc, product) => acc + product.fat, 0) +
+			dietDay?.dinner?.products.reduce((acc, product) => acc + product.fat, 0) +
+			dietDay?.snacks?.products.reduce((acc, product) => acc + product.fat, 0),
 	]
 
 	const barChartLabels = ['Carbs', 'Protein', 'Fat']
 
 	const gaugeChartData =
-		dietDay.breakfast.products.reduce((acc, product) => acc + product.calories, 0) +
-		dietDay.lunch.products.reduce((acc, product) => acc + product.calories, 0) +
-		dietDay.dinner.products.reduce((acc, product) => acc + product.calories, 0) +
-		dietDay.snacks.products.reduce((acc, product) => acc + product.calories, 0)
+		dietDay?.breakfast?.products.reduce((acc, product) => acc + product.calories, 0) +
+			dietDay?.lunch?.products.reduce((acc, product) => acc + product.calories, 0) +
+			dietDay?.dinner?.products.reduce((acc, product) => acc + product.calories, 0) +
+			dietDay?.snacks?.products.reduce((acc, product) => acc + product.calories, 0) || 0
 
 	const gaugeChartSettings = {
 		width: 200,

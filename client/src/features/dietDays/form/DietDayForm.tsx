@@ -13,14 +13,42 @@ export default function DietDayForm({ dietDay, closeForm, submitForm }: Props) {
 
 		const formData = new FormData(event.currentTarget)
 
-		const formValues: { [key: string]: FormDataEntryValue } = {}
-		formData.forEach((value, key) => {
-			formValues[key] = value
+		const createMeal = (mealName: string): Meal => ({
+			id: crypto.randomUUID(),
+			name: mealName,
+			products: [],
 		})
 
-		if (dietDay) formValues.id = dietDay.id
+		const updateMealName = (existingMeal: Meal | undefined, newName: string | null): Meal => {
+			if (newName && existingMeal) {
+				// Update existing meal name but preserve products
+				return { ...existingMeal, name: newName }
+			} else if (newName) {
+				// Create new meal with new name
+				return createMeal(newName)
+			} else if (existingMeal) {
+				// Keep existing meal as is
+				return existingMeal
+			} else {
+				// Default empty meal
+				return createMeal('')
+			}
+		}
 
-		submitForm(formValues as unknown as DietDay)
+		const newDietDay: DietDay = {
+			id: dietDay?.id || '',
+			date: dietDay?.date || new Date().toISOString(),
+			breakfast: updateMealName(dietDay?.breakfast, formData.get('breakfast') as string),
+			lunch: updateMealName(dietDay?.lunch, formData.get('lunch') as string),
+			dinner: updateMealName(dietDay?.dinner, formData.get('dinner') as string),
+			snacks: updateMealName(dietDay?.snacks, formData.get('snacks') as string),
+			caloriesTarget: parseInt(formData.get('caloriesTarget') as string) || 0,
+			proteinTarget: parseInt(formData.get('proteinTarget') as string) || 0,
+			carbsTarget: parseInt(formData.get('carbsTarget') as string) || 0,
+			fatTarget: parseInt(formData.get('fatTarget') as string) || 0,
+		}
+
+		submitForm(newDietDay)
 	}
 
 	return (

@@ -1,21 +1,20 @@
 import { Grid as Grid } from '@mui/material'
-import DietDayDetails from '../details/DietDayDetails'
 import DietDayForm from '../form/DietDayForm'
 import MealsTable from './MealsTable'
 
 type Props = {
 	dietDays: DietDay[]
-	selectedDietDay?: DietDay
-	cancelSelectedDietDay: () => void
-	selectDietDay: (id: string) => void
 	openForm: (id: string) => void
 	closeForm: () => void
 	editMode: boolean
 	submitForm: (dietDay: DietDay) => void
-	deleteDietDay: (id: string) => void
+	page: number
+	rowsPerPage: number
+	onPageChange: (event: unknown, newPage: number) => void
+	onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function DietDaysDashboard({ dietDays, selectedDietDay, cancelSelectedDietDay, selectDietDay, openForm, closeForm, editMode, submitForm, deleteDietDay }: Props) {
+export default function DietDaysDashboard({ dietDays, openForm, closeForm, editMode, submitForm, page, rowsPerPage, onPageChange, onRowsPerPageChange }: Props) {
 	return (
 		<>
 			{editMode && (
@@ -25,7 +24,6 @@ export default function DietDaysDashboard({ dietDays, selectedDietDay, cancelSel
 					sx={{ mb: { xs: 2, sm: 3 } }}>
 					<Grid size={{ xs: 12 }}>
 						<DietDayForm
-							dietDay={selectedDietDay}
 							closeForm={closeForm}
 							submitForm={submitForm}
 						/>
@@ -38,10 +36,11 @@ export default function DietDaysDashboard({ dietDays, selectedDietDay, cancelSel
 				<Grid size={{ xs: 12 }}>
 					<MealsTable
 						dietDays={dietDays}
-						selectDietDay={selectDietDay}
-						cancelSelectedDietDay={cancelSelectedDietDay}
-						deleteDietDay={deleteDietDay}
 						openForm={openForm}
+						page={page}
+						rowsPerPage={rowsPerPage}
+						onPageChange={onPageChange}
+						onRowsPerPageChange={onRowsPerPageChange}
 					/>
 				</Grid>
 			</Grid>
