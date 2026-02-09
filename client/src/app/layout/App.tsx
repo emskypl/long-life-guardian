@@ -45,7 +45,7 @@ function App() {
 		if (user) {
 			axios
 				.get<DietDay[]>(`https://localhost:5002/api/dietdays/user/${user.userId}`)
-				.then(response => setDietDays(response.data))
+				.then(response => setDietDays(response.data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())))
 				.catch(error => {
 					console.error('Error fetching diet days:', error)
 					setSnackbar({ open: true, message: 'Failed to fetch diet days', severity: 'error' })
@@ -146,6 +146,7 @@ function App() {
 			proteinTarget: typeof dietDay.proteinTarget === 'number' ? dietDay.proteinTarget : 0,
 			carbsTarget: typeof dietDay.carbsTarget === 'number' ? dietDay.carbsTarget : 0,
 			fatTarget: typeof dietDay.fatTarget === 'number' ? dietDay.fatTarget : 0,
+			userId: user?.userId || '', // Ensure userId is included
 		}
 
 		// Only include ID when updating

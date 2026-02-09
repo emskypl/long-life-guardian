@@ -9,6 +9,7 @@ type DietDay = {
 	carbsTarget: number
 	fatTarget: number
 	caloriesTarget: number
+	userId: string
 }
 
 type Meal = {
