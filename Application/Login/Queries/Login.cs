@@ -33,6 +33,7 @@ public class Login
 
             return new UserDto
             {
+                UserId = user.Id,
                 Username = user.Username,
                 Token = tokenService.CreateToken(user.Id, user.Username, user.Email),
                 Email = user.Email

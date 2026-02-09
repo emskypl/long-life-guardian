@@ -44,7 +44,7 @@ function App() {
 	useEffect(() => {
 		if (user) {
 			axios
-				.get<DietDay[]>('https://localhost:5002/api/dietdays')
+				.get<DietDay[]>(`https://localhost:5002/api/dietdays/user/${user.userId}`)
 				.then(response => setDietDays(response.data))
 				.catch(error => {
 					console.error('Error fetching diet days:', error)

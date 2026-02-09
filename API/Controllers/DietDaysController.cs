@@ -19,6 +19,12 @@ public class DietDaysController : BaseApiController
         return await Mediator.Send(new GetDietDayDetails.Query { Id = id });
     }
 
+    [HttpGet("user/{id}")]
+    public async Task<ActionResult<List<DietDay>>> GetDietDayForUser(string id)
+    {
+        return await Mediator.Send(new GetDietDayForUser.Query { Id = id });
+    }
+
     [HttpPost]
     public async Task<ActionResult<string>> CreateDietDay(DietDay dietDay)
     {

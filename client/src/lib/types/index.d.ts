@@ -27,6 +27,7 @@ type Product = {
 }
 
 type User = {
+	userId: string
 	username: string
 	token: string
 	email: string

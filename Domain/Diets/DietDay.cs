@@ -12,4 +12,5 @@ public class DietDay
     public int CarbsTarget { get; set; }
     public int FatTarget { get; set; }
     public int CaloriesTarget { get; set; }
+    public required string UserId { get; set; }
 }

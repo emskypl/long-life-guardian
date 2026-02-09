@@ -65,6 +65,7 @@ public class DbInitializer
                 ProteinTarget = 150,
                 CarbsTarget = 200,
                 CaloriesTarget = 2000,
+                UserId = "test-user-id"
             },
             new() {
                 Date = DateTime.Today.AddDays(-6),
@@ -76,6 +77,7 @@ public class DbInitializer
                 ProteinTarget = 150,
                 CarbsTarget = 200,
                 CaloriesTarget = 2000,
+                UserId = "test-user-id"
             },
             new() {
                 Date = DateTime.Today.AddDays(-5),
@@ -87,6 +89,7 @@ public class DbInitializer
                 ProteinTarget = 150,
                 CarbsTarget = 200,
                 CaloriesTarget = 2000,
+                UserId = "test-user-id"
             },
             new() {
                 Date = DateTime.Today.AddDays(-4),
@@ -98,6 +101,7 @@ public class DbInitializer
                 ProteinTarget = 150,
                 CarbsTarget = 200,
                 CaloriesTarget = 2000,
+                UserId = "test-user-id"
             },
             new() {
                 Date = DateTime.Today.AddDays(-3),
@@ -109,6 +113,7 @@ public class DbInitializer
                 ProteinTarget = 150,
                 CarbsTarget = 200,
                 CaloriesTarget = 2000,
+                UserId = "test-user-id"
             },
             new() {
                 Date = DateTime.Today.AddDays(-2),
@@ -119,7 +124,8 @@ public class DbInitializer
                 FatTarget = 70,
                 ProteinTarget = 150,
                 CarbsTarget = 200,
-                CaloriesTarget = 2000
+                CaloriesTarget = 2000,
+                UserId = "test-user-id"
             },
             new() {
                 Date = DateTime.Today.AddDays(-1),
@@ -130,7 +136,8 @@ public class DbInitializer
                 FatTarget = 70,
                 ProteinTarget = 150,
                 CarbsTarget = 200,
-                CaloriesTarget = 2000
+                CaloriesTarget = 2000,
+                UserId = "test-user-id"
             },
             new() {
                 Date = DateTime.Today,
@@ -141,7 +148,8 @@ public class DbInitializer
                 FatTarget = 70,
                 ProteinTarget = 150,
                 CarbsTarget = 200,
-                CaloriesTarget = 2000
+                CaloriesTarget = 2000,
+                UserId = "test-user-id"
             },
             new() {
                 Date = DateTime.Today.AddDays(1),
@@ -152,7 +160,8 @@ public class DbInitializer
                 FatTarget = 70,
                 ProteinTarget = 150,
                 CarbsTarget = 200,
-                CaloriesTarget = 2000
+                CaloriesTarget = 2000,
+                UserId = "test-user-id"
             },
             new() {
                 Date = DateTime.Today.AddDays(2),
@@ -163,7 +172,8 @@ public class DbInitializer
                 FatTarget = 70,
                 ProteinTarget = 150,
                 CarbsTarget = 200,
-                CaloriesTarget = 2000
+                CaloriesTarget = 2000,
+                UserId = "test-user-id"
             }
         };
 
