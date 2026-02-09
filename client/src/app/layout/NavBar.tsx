@@ -5,7 +5,7 @@ type Props = {
 	isAuthenticated: boolean
 	activeTab: 'diets' | 'exercise'
 	onTabChange: (tab: 'diets' | 'exercise') => void
-	onLogin: () => void
+	onLogin: (activeTab: 'login' | 'register') => void
 	onLogout: () => void
 	onGoHome: () => void
 	showLoginForm?: boolean
@@ -70,7 +70,7 @@ export default function NavBar({ isAuthenticated, activeTab, onTabChange, onLogi
 						)}
 						<Box sx={{ ml: 'auto', display: { xs: 'block', md: 'flex' }, gap: 1 }}>
 							<MenuItem
-								onClick={isAuthenticated ? onLogout : onLogin}
+							onClick={isAuthenticated ? onLogout : () => onLogin('login')}
 								sx={{
 									display: showLoginForm ? 'none' : 'block',
 									fontSize: '1rem',

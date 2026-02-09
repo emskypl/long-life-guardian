@@ -14,7 +14,10 @@ function App() {
 	const [rowsPerPage, setRowsPerPage] = useState(7)
 	const [user, setUser] = useState<User | null>(null)
 	const [activeTab, setActiveTab] = useState<'diets' | 'exercise'>('diets')
-	const [showLoginForm, setShowLoginForm] = useState(false)
+	const [showLoginForm, setShowLoginForm] = useState<{ show: boolean; activeTab: 'login' | 'register' }>({
+		show: false,
+		activeTab: 'login',
+	})
 	const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: 'success' | 'error' }>({
 		open: false,
 		message: '',
@@ -74,7 +77,7 @@ function App() {
 		axios.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`
 		showSnackbar(`Welcome, ${userData.username}!`, 'success')
 		// Reset login form state
-		setShowLoginForm(false)
+		setShowLoginForm({ show: false, activeTab: 'login' })
 	}
 
 	const handleLogout = () => {
@@ -82,7 +85,7 @@ function App() {
 		setEditMode(false)
 		setActiveTab('diets')
 		setDietDays([])
-		setShowLoginForm(false)
+		setShowLoginForm({ show: false, activeTab: 'login' })
 		// Clear user from localStorage
 		localStorage.removeItem('user')
 		// Remove authorization header
@@ -95,14 +98,14 @@ function App() {
 		setEditMode(false)
 	}
 
-	const handleShowLoginForm = () => {
-		setShowLoginForm(true)
+	const handleShowLoginForm = (activeTab: 'login' | 'register' = 'login') => {
+		setShowLoginForm({ show: true, activeTab })
 	}
 
 	const handleGoHome = () => {
 		if (!user) {
 			// If not logged in, go back to landing page (hide login form)
-			setShowLoginForm(false)
+			setShowLoginForm({ show: false, activeTab: 'login' })
 		} else {
 			// If logged in, go to diets tab
 			handleTabChange('diets')
@@ -221,7 +224,7 @@ function App() {
 				onLogin={handleShowLoginForm}
 				onLogout={handleLogout}
 				onGoHome={handleGoHome}
-				showLoginForm={showLoginForm}
+				showLoginForm={showLoginForm.show}
 			/>
 			<Container
 				maxWidth='xl'
@@ -229,7 +232,8 @@ function App() {
 				{!user ? (
 					<LandingPage
 						onLoginSuccess={handleLoginSuccess}
-						showLoginFormProp={showLoginForm}
+						showLoginFormProp={showLoginForm.show}
+						initialTabFromParent={showLoginForm.activeTab}
 						setShowLoginForm={setShowLoginForm}
 					/>
 				) : activeTab === 'diets' ? (

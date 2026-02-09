@@ -8,27 +8,29 @@ import LoginForm from './LoginForm'
 type Props = {
 	onLoginSuccess: (user: User) => void
 	showLoginFormProp?: boolean
-	setShowLoginForm?: (show: boolean) => void
+	initialTabFromParent?: 'login' | 'register'
+	setShowLoginForm?: (state: { show: boolean; activeTab: 'login' | 'register' }) => void
 }
 
-export default function LandingPage({ onLoginSuccess, showLoginFormProp = false, setShowLoginForm }: Props) {
+export default function LandingPage({ onLoginSuccess, showLoginFormProp = false, initialTabFromParent = 'login', setShowLoginForm }: Props) {
 	const [showLoginForm, setShowLoginFormState] = useState(showLoginFormProp)
-	const [initialTab, setInitialTab] = useState<'login' | 'register'>('login')
+	const [initialTab, setInitialTab] = useState<'login' | 'register'>(initialTabFromParent)
 
 	// Update showLoginForm when prop changes
 	useEffect(() => {
 		if (showLoginFormProp) {
 			setShowLoginFormState(true)
+			setInitialTab(initialTabFromParent)
 		} else {
 			setShowLoginFormState(false)
 		}
-	}, [showLoginFormProp])
+	}, [showLoginFormProp, initialTabFromParent])
 
 	const handleShowLogin = () => {
 		setInitialTab('login')
 		setShowLoginFormState(true)
 		if (setShowLoginForm) {
-			setShowLoginForm(true)
+			setShowLoginForm({ show: true, activeTab: 'login' })
 		}
 	}
 
@@ -36,7 +38,7 @@ export default function LandingPage({ onLoginSuccess, showLoginFormProp = false,
 		setInitialTab('register')
 		setShowLoginFormState(true)
 		if (setShowLoginForm) {
-			setShowLoginForm(true)
+			setShowLoginForm({ show: true, activeTab: 'register' })
 		}
 	}
 
