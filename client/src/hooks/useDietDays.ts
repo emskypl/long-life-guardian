@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { dietDaysApi } from '../lib/api/dietDaysApi';
 
 export const useDietDays = (isAuthenticated: boolean = true) => {
@@ -7,7 +7,7 @@ export const useDietDays = (isAuthenticated: boolean = true) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const fetchDietDays = async () => {
+	const fetchDietDays = useCallback(async () => {
 		if (!isAuthenticated) {
 			setDietDays([]);
 			setIsLoading(false);
@@ -25,11 +25,11 @@ export const useDietDays = (isAuthenticated: boolean = true) => {
 		} finally {
 			setIsLoading(false);
 		}
-	};
+	}, [isAuthenticated]);
 
 	useEffect(() => {
 		fetchDietDays();
-	}, [isAuthenticated]);
+	}, [fetchDietDays]);
 
 	const createDietDay = async (dietDay: DietDay) => {
 		try {
