@@ -1,3 +1,4 @@
+using Application.Common.Exceptions;
 using Application.Core;
 using Domain.Core;
 using MediatR;
@@ -23,12 +24,12 @@ public class Login
 
             if (user == null)
             {
-                throw new UnauthorizedAccessException("Invalid login or password");
+                throw new UnauthorizedException("Invalid login or password");
             }
 
             if (!PasswordHasher.VerifyPassword(request.Password, user.Password))
             {
-                throw new UnauthorizedAccessException("Invalid login or password");
+                throw new UnauthorizedException("Invalid login or password");
             }
 
             return new UserDto

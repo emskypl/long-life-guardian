@@ -1,24 +1,17 @@
-using Application.Diets.Queries;
+using API.Extensions;
 using Application.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Persistence;
+using API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<AppDbContext>(opt =>
-{
-    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-builder.Services.AddCors();
-builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<GetDietDaysList.Handler>());
-builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+// Use extension method for application services
+builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddScoped<TokenService>();
 
 // JWT Authentication
@@ -37,6 +30,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
+// Register error handling middleware first
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
 app.UseCors(opt =>
 {
     opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "https://localhost:3000", "http://localhost:3001", "https://localhost:3001");
@@ -48,20 +44,6 @@ app.UseAuthorization();
 // Configure the HTTP request pipeline.
 app.MapControllers();
 
-using var scope = app.Services.CreateScope();
-var services = scope.ServiceProvider;
-
-try
-{
-    var context = services.GetRequiredService<AppDbContext>();
-    await context.Database.MigrateAsync();
-    await DbInitializer.SeedData(context);
-}
-catch (Exception ex)
-{
-    var logger = services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex, "An error occurred during migration");
-}
-
+await app.Services.InitializeDatabaseAsync();
 
 app.Run();
