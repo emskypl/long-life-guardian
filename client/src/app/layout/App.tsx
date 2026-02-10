@@ -1,7 +1,7 @@
 import { Alert, Box, Container, CssBaseline, Snackbar } from '@mui/material'
 
-import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { dietDayAPI } from '../../lib/api'
 import NavBar from './NavBar'
 import DietDaysDashboard from '../../features/dietDays/dashboard/DietDayDashboard'
 import ExerciseDashboard from '../../features/exercise/ExerciseDashboard'
@@ -33,8 +33,6 @@ function App() {
 			try {
 				const parsedUser = JSON.parse(storedUser)
 				setUser(parsedUser)
-				// Set axios default authorization header
-				axios.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`
 			} catch (error) {
 				console.error('Error parsing stored user:', error)
 				localStorage.removeItem('user')
@@ -45,9 +43,9 @@ function App() {
 	// Fetch diet days when user is authenticated
 	useEffect(() => {
 		if (user) {
-			axios
-				.get<DietDay[]>(`https://localhost:5002/api/dietdays/user/${user.userId}`)
-				.then(response => setDietDays(response.data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())))
+			dietDayAPI
+				.getByUserId(user.userId)
+				.then(data => setDietDays(data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())))
 				.catch(error => {
 					console.error('Error fetching diet days:', error)
 					setSnackbar({ open: true, message: 'Failed to fetch diet days', severity: 'error' })
@@ -75,8 +73,6 @@ function App() {
 		setUser(userData)
 		// Store user in localStorage for persistence
 		localStorage.setItem('user', JSON.stringify(userData))
-		// Set axios default authorization header
-		axios.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`
 		showSnackbar(`Welcome, ${userData.username}!`, 'success')
 		// Reset login form state
 		setShowLoginForm({ show: false, activeTab: 'login' })
@@ -90,8 +86,6 @@ function App() {
 		setShowLoginForm({ show: false, activeTab: 'login' })
 		// Clear user from localStorage
 		localStorage.removeItem('user')
-		// Remove authorization header
-		delete axios.defaults.headers.common['Authorization']
 		showSnackbar('Logged out successfully', 'success')
 	}
 
@@ -167,14 +161,14 @@ function App() {
 
 		if (isUpdate) {
 			// Update existing diet day
-			axios
-				.put('https://localhost:5002/api/dietdays', validDietDay)
+			dietDayAPI
+				.update(validDietDay as DietDay)
 				.then(() => {
 					// Re-fetch the updated diet day to ensure we have complete data with IDs
-					return axios.get<DietDay>(`https://localhost:5002/api/dietdays/${dietDay.id}`)
+					return dietDayAPI.getById(dietDay.id)
 				})
-				.then(response => {
-					setDietDays(dietDays.map(existingDietDay => (existingDietDay.id === dietDay.id ? response.data : existingDietDay)))
+				.then(updatedDietDay => {
+					setDietDays(dietDays.map(existingDietDay => (existingDietDay.id === dietDay.id ? updatedDietDay : existingDietDay)))
 					setEditMode(false)
 					showSnackbar('Diet day updated successfully!', 'success')
 					console.log('Diet day updated successfully')
@@ -186,19 +180,18 @@ function App() {
 				})
 		} else {
 			// Create new diet day - don't send ID, backend will generate it
-			axios
-				.post('https://localhost:5002/api/dietdays', validDietDay)
-				.then(response => {
-					const newId = response.data
+			dietDayAPI
+				.create(validDietDay)
+				.then(newId => {
 					// Fetch the newly created diet day to get complete data with all IDs
-					return axios.get<DietDay>(`https://localhost:5002/api/dietdays/${newId}`)
+					return dietDayAPI.getById(newId)
 				})
-				.then(response => {
-					const newDietDays = [...dietDays, response.data].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+				.then(newDietDay => {
+					const newDietDays = [...dietDays, newDietDay].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 					setDietDays(newDietDays)
 					setEditMode(false)
 					showSnackbar('Diet day created successfully!', 'success')
-					console.log('Diet day created successfully with ID:', response.data.id)
+					console.log('Diet day created successfully with ID:', newDietDay.id)
 				})
 				.catch(error => {
 					showSnackbar('Failed to create diet day', 'error')

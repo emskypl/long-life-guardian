@@ -2,40 +2,23 @@ import { Box, Card, TableContainer, Typography } from '@mui/material'
 import DietDayDetailsTable from './DietDayDetailsTable'
 import { BarChart } from '@mui/x-charts/BarChart'
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge'
+import { calculateDayNutrients } from '../../../lib/utils/nutritionCalculations'
+
 type Props = {
 	dietDay: DietDay
 }
 
 export default function DietDayDetails({ dietDay }: Props) {
+	const nutrients = calculateDayNutrients(dietDay)
+	
 	const barChartTargetData = [dietDay.carbsTarget, dietDay.proteinTarget, dietDay.fatTarget]
-
-	const barChartCurrentData = [
-		dietDay?.breakfast?.products.reduce((acc, product) => acc + product.carbs, 0) +
-			dietDay?.lunch?.products.reduce((acc, product) => acc + product.carbs, 0) +
-			dietDay?.dinner?.products.reduce((acc, product) => acc + product.carbs, 0) +
-			dietDay?.snacks?.products.reduce((acc, product) => acc + product.carbs, 0),
-		dietDay?.breakfast?.products.reduce((acc, product) => acc + product.protein, 0) +
-			dietDay?.lunch?.products.reduce((acc, product) => acc + product.protein, 0) +
-			dietDay?.dinner?.products.reduce((acc, product) => acc + product.protein, 0) +
-			dietDay?.snacks?.products.reduce((acc, product) => acc + product.protein, 0),
-		dietDay?.breakfast?.products.reduce((acc, product) => acc + product.fat, 0) +
-			dietDay?.lunch?.products.reduce((acc, product) => acc + product.fat, 0) +
-			dietDay?.dinner?.products.reduce((acc, product) => acc + product.fat, 0) +
-			dietDay?.snacks?.products.reduce((acc, product) => acc + product.fat, 0),
-	]
-
+	const barChartCurrentData = [nutrients.carbs, nutrients.protein, nutrients.fat]
 	const barChartLabels = ['Carbs', 'Protein', 'Fat']
-
-	const gaugeChartData =
-		dietDay?.breakfast?.products.reduce((acc, product) => acc + product.calories, 0) +
-			dietDay?.lunch?.products.reduce((acc, product) => acc + product.calories, 0) +
-			dietDay?.dinner?.products.reduce((acc, product) => acc + product.calories, 0) +
-			dietDay?.snacks?.products.reduce((acc, product) => acc + product.calories, 0) || 0
 
 	const gaugeChartSettings = {
 		width: 200,
 		height: 200,
-		value: (gaugeChartData / dietDay.caloriesTarget) * 100,
+		value: (nutrients.calories / dietDay.caloriesTarget) * 100,
 	}
 
 	return (
@@ -69,7 +52,7 @@ export default function DietDayDetails({ dietDay }: Props) {
 							cornerRadius='50%'
 							value={gaugeChartSettings.value > 100 ? 100 : gaugeChartSettings.value}
 							valueMax={100}
-							text={`${gaugeChartData}/${dietDay.caloriesTarget}`}
+							text={`${nutrients.calories}/${dietDay.caloriesTarget}`}
 							sx={theme => ({
 								[`& .${gaugeClasses.valueText}`]: {
 									fontSize: 25,

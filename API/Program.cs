@@ -1,24 +1,19 @@
-using Application.Diets.Queries;
+using API.Extensions;
+using API.Middleware;
 using Application.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Persistence;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<AppDbContext>(opt =>
-{
-    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-builder.Services.AddCors();
-builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<GetDietDaysList.Handler>());
-builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+// Use extension method for application services
+builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddScoped<TokenService>();
 
 // JWT Authentication
@@ -36,6 +31,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
+
+// Add global error handling middleware FIRST
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseCors(opt =>
 {

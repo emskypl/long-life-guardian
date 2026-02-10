@@ -11,30 +11,12 @@ public class LoginController(IMediator mediator) : BaseApiController(mediator)
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register([FromBody] Register.Command command)
     {
-        try
-        {
-            return await Mediator.Send(command);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return await Mediator.Send(command);
     }
 
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login([FromBody] Login.Query query)
     {
-        try
-        {
-            return await Mediator.Send(query);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Unauthorized(ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        return await Mediator.Send(query);
     }
 }

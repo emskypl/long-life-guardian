@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Box, Button, TextField, Typography, Paper, Tabs, Tab, Alert } from '@mui/material'
-import axios from 'axios'
+import { authAPI } from '../../lib/api'
 
 type Props = {
 	onLoginSuccess: (user: User) => void
@@ -39,10 +39,11 @@ export default function LoginForm({ onLoginSuccess, initialTab = 'login' }: Prop
 		setLoading(true)
 
 		try {
-			const response = await axios.post<User>('https://localhost:5002/api/login/login', loginData)
-			onLoginSuccess(response.data)
+			const user = await authAPI.login(loginData)
+			onLoginSuccess(user)
 		} catch (err: any) {
-			setError(err.response?.data || 'Login failed. Please check your credentials.')
+			const errorMessage = err.response?.data?.error || 'Login failed. Please check your credentials.'
+			setError(errorMessage)
 		} finally {
 			setLoading(false)
 		}
@@ -54,10 +55,11 @@ export default function LoginForm({ onLoginSuccess, initialTab = 'login' }: Prop
 		setLoading(true)
 
 		try {
-			const response = await axios.post<User>('https://localhost:5002/api/login/register', registerData)
-			onLoginSuccess(response.data)
+			const user = await authAPI.register(registerData)
+			onLoginSuccess(user)
 		} catch (err: any) {
-			setError(err.response?.data || 'Registration failed. Please try again.')
+			const errorMessage = err.response?.data?.error || 'Registration failed. Please try again.'
+			setError(errorMessage)
 		} finally {
 			setLoading(false)
 		}
