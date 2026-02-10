@@ -1,9 +1,9 @@
 using Application.Common.Exceptions;
+using Application.Diets.DTOs;
 using AutoMapper;
-using Domain.Diets;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System;
 
 namespace Application.Diets.Commands;
 
@@ -11,15 +11,19 @@ public class EditDietDay
 {
     public class Command : IRequest
     {
-        public required DietDay DietDay { get; set; }
+        public required DietDayDto DietDay { get; set; }
     }
 
     public class Handler(AppDbContext context, IMapper mapper) : IRequestHandler<Command>
     {
         public async Task Handle(Command request, CancellationToken cancellationToken)
         {
-            var dietDay = await context.DietDays.FindAsync([request.DietDay.Id], cancellationToken);
-
+            var dietDay = await context.DietDays
+                .Include(d => d.Breakfast).ThenInclude(m => m!.Products)
+                .Include(d => d.Lunch).ThenInclude(m => m!.Products)
+                .Include(d => d.Dinner).ThenInclude(m => m!.Products)
+                .Include(d => d.Snacks).ThenInclude(m => m!.Products)
+                .FirstOrDefaultAsync(d => d.Id == request.DietDay.Id, cancellationToken);
 
             if (dietDay == null)
             {
@@ -31,5 +35,4 @@ public class EditDietDay
             await context.SaveChangesAsync(cancellationToken);
         }
     }
-
 }
