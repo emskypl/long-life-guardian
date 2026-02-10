@@ -1,6 +1,6 @@
 import { Alert, Box, Container, CssBaseline, Snackbar } from '@mui/material'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import NavBar from './NavBar'
 import DietDaysDashboard from '../../features/dietDays/dashboard/DietDayDashboard'
 import ExerciseDashboard from '../../features/exercise/ExerciseDashboard'
@@ -23,8 +23,15 @@ function App() {
 		severity: 'success',
 	})
 
-	const { user } = useAuth()
-	const { dietDays, createDietDay, updateDietDay, error: dietDaysError } = useDietDays()
+	const { user, logout } = useAuth()
+	const { dietDays, createDietDay, updateDietDay, error: dietDaysError } = useDietDays(!!user)
+
+	// Show error notifications when dietDaysError changes
+	useEffect(() => {
+		if (dietDaysError) {
+			showSnackbar(dietDaysError, 'error')
+		}
+	}, [dietDaysError])
 
 	const handleOpenForm = () => {
 		setEditMode(true)
@@ -43,17 +50,16 @@ function App() {
 	}
 
 	const handleLoginSuccess = (userData: User) => {
-		// User is handled by the useAuth hook automatically
 		showSnackbar(`Welcome, ${userData.username}!`, 'success')
 		setShowLoginForm({ show: false, activeTab: 'login' })
 	}
 
 	const handleLogout = () => {
+		logout()
 		setEditMode(false)
 		setActiveTab('diets')
 		setShowLoginForm({ show: false, activeTab: 'login' })
 		showSnackbar('Logged out successfully', 'success')
-		// Logout logic is handled by NavBar which uses useAuth hook
 	}
 
 	const handleTabChange = (tab: 'diets' | 'exercise') => {
@@ -97,11 +103,6 @@ function App() {
 	const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setRowsPerPage(parseInt(event.target.value, 10))
 		setPage(0)
-	}
-
-	// Show errors from diet days hook
-	if (dietDaysError) {
-		showSnackbar(dietDaysError, 'error')
 	}
 
 	return (
