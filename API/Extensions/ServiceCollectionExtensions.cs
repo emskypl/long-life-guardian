@@ -1,5 +1,6 @@
 ﻿using Application.Diets.Queries;
 using Application.Common.Behaviors;
+using Application.Common.Services;
 using Application.Core;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,9 @@ public static class ServiceCollectionExtensions
 
         services.AddAutoMapper(typeof(MappingProfiles).Assembly);
         services.AddValidatorsFromAssemblyContaining<GetDietDaysList.Handler>();
+        
+        // Register application services
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
 
         return services;
     }

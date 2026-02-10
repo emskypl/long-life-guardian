@@ -1,5 +1,6 @@
+using Application.Common.Exceptions;
+using Application.Common.Services;
 using Application.Core;
-using Domain.Core;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -14,7 +15,7 @@ public class Login
         public required string Password { get; set; }
     }
 
-    public class Handler(AppDbContext context, TokenService tokenService) : IRequestHandler<Query, UserDto>
+    public class Handler(AppDbContext context, TokenService tokenService, IPasswordHasher passwordHasher) : IRequestHandler<Query, UserDto>
     {
         public async Task<UserDto> Handle(Query request, CancellationToken cancellationToken)
         {
@@ -23,12 +24,12 @@ public class Login
 
             if (user == null)
             {
-                throw new UnauthorizedAccessException("Invalid login or password");
+                throw new UnauthorizedException("Invalid login or password");
             }
 
-            if (!PasswordHasher.VerifyPassword(request.Password, user.Password))
+            if (!passwordHasher.VerifyPassword(request.Password, user.Password))
             {
-                throw new UnauthorizedAccessException("Invalid login or password");
+                throw new UnauthorizedException("Invalid login or password");
             }
 
             return new UserDto

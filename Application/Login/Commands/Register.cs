@@ -1,5 +1,6 @@
+using Application.Common.Exceptions;
+using Application.Common.Services;
 using Application.Core;
-using Domain.Core;
 using Domain.Login;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -17,24 +18,24 @@ public class Register
         public required string Username { get; set; }
     }
 
-    public class Handler(AppDbContext context, TokenService tokenService) : IRequestHandler<Command, UserDto>
+    public class Handler(AppDbContext context, TokenService tokenService, IPasswordHasher passwordHasher) : IRequestHandler<Command, UserDto>
     {
         public async Task<UserDto> Handle(Command request, CancellationToken cancellationToken)
         {
             if (await context.Users.AnyAsync(x => x.Login == request.Login, cancellationToken))
             {
-                throw new Exception("Login already exists");
+                throw new DuplicateException("Login already exists");
             }
 
             if (await context.Users.AnyAsync(x => x.Email == request.Email, cancellationToken))
             {
-                throw new Exception("Email already exists");
+                throw new DuplicateException("Email already exists");
             }
 
             var user = new User
             {
                 Login = request.Login,
-                Password = PasswordHasher.HashPassword(request.Password),
+                Password = passwordHasher.HashPassword(request.Password),
                 Email = request.Email,
                 Username = request.Username
             };

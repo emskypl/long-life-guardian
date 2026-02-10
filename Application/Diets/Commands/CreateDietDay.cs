@@ -1,4 +1,5 @@
-using System;
+using Application.Diets.DTOs;
+using AutoMapper;
 using Domain.Diets;
 using MediatR;
 using Persistence;
@@ -9,22 +10,21 @@ public class CreateDietDay
 {
     public class Command : IRequest<string>
     {
-        public required DietDay DietDay { get; set; }
+        public required CreateDietDayDto DietDay { get; set; }
+        public required string UserId { get; set; }
     }
 
-    public class Handler(AppDbContext context) : IRequestHandler<Command, string>
+    public class Handler(AppDbContext context, IMapper mapper) : IRequestHandler<Command, string>
     {
         public async Task<string> Handle(Command request, CancellationToken cancellationToken)
         {
-            if (request.DietDay == null)
-            {
-                throw new ArgumentNullException(nameof(request.DietDay));
-            }
+            var dietDay = mapper.Map<DietDay>(request.DietDay);
+            dietDay.UserId = request.UserId;
 
-            context.DietDays.Add(request.DietDay);
+            context.DietDays.Add(dietDay);
             await context.SaveChangesAsync(cancellationToken);
-            return request.DietDay.Id;
+            
+            return dietDay.Id;
         }
     }
-
 }
