@@ -31,6 +31,14 @@ public class ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandling
                 code = HttpStatusCode.NotFound;
                 result = JsonSerializer.Serialize(new { error = notFoundException.Message });
                 break;
+            case UnauthorizedException unauthorizedException:
+                code = HttpStatusCode.Unauthorized;
+                result = JsonSerializer.Serialize(new { error = unauthorizedException.Message });
+                break;
+            case UserAlreadyExistsException userExistsException:
+                code = HttpStatusCode.Conflict;
+                result = JsonSerializer.Serialize(new { error = userExistsException.Message });
+                break;
             case ValidationException validationException:
                 code = HttpStatusCode.BadRequest;
                 result = JsonSerializer.Serialize(new

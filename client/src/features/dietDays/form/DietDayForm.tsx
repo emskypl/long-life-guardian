@@ -83,11 +83,15 @@ export default function DietDayForm({ dietDay, closeForm, submitForm }: Props) {
 
 		const formData = new FormData(event.currentTarget)
 
-		const createMeal = (mealName: string, products: Product[]): Meal => ({
-			id: dietDay?.[mealName.toLowerCase() as keyof DietDay]?.id || crypto.randomUUID(),
-			name: mealName,
-			products,
-		})
+		const createMeal = (mealName: string, products: Product[]): Meal => {
+			const mealKey = mealName.toLowerCase() as 'breakfast' | 'lunch' | 'dinner' | 'snacks'
+			const existingMeal = dietDay?.[mealKey] as Meal | undefined
+			return {
+				id: existingMeal?.id || crypto.randomUUID(),
+				name: mealName,
+				products,
+			}
+		}
 
 		const newDietDay: DietDay = {
 			id: dietDay?.id || '',
@@ -100,6 +104,7 @@ export default function DietDayForm({ dietDay, closeForm, submitForm }: Props) {
 			proteinTarget: parseInt(formData.get('proteinTarget') as string) || 0,
 			carbsTarget: parseInt(formData.get('carbsTarget') as string) || 0,
 			fatTarget: parseInt(formData.get('fatTarget') as string) || 0,
+			userId: dietDay?.userId || '',
 		}
 
 		submitForm(newDietDay)

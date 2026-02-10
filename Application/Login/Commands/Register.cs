@@ -1,3 +1,4 @@
+using Application.Common.Exceptions;
 using Application.Core;
 using Domain.Core;
 using Domain.Login;
@@ -23,12 +24,12 @@ public class Register
         {
             if (await context.Users.AnyAsync(x => x.Login == request.Login, cancellationToken))
             {
-                throw new Exception("Login already exists");
+                throw new UserAlreadyExistsException("Login already exists");
             }
 
             if (await context.Users.AnyAsync(x => x.Email == request.Email, cancellationToken))
             {
-                throw new Exception("Email already exists");
+                throw new UserAlreadyExistsException("Email already exists");
             }
 
             var user = new User
