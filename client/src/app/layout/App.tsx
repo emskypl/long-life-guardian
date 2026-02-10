@@ -24,6 +24,8 @@ function App() {
 		severity: 'success',
 	})
 
+	const backgroundImage = './public/images/background_2400_1320.jpg'
+
 	// Check for existing user in localStorage on mount
 	useEffect(() => {
 		const storedUser = localStorage.getItem('user')
@@ -216,7 +218,7 @@ function App() {
 	}
 
 	return (
-		<Box sx={{ bgcolor: '#eeeeee', minHeight: '100dvh' }}>
+		<Box sx={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center', minHeight: '100dvh' }}>
 			<CssBaseline />
 			<NavBar
 				isAuthenticated={!!user}

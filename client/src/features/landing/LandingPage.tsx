@@ -63,7 +63,7 @@ export default function LandingPage({ onLoginSuccess, showLoginFormProp = false,
 						variant='h2'
 						component='h1'
 						gutterBottom
-						sx={{ fontWeight: 700, color: 'primary.main', mb: 2 }}>
+						sx={{ fontWeight: 900, color: 'primary.main', mb: 2 }}>
 						Long Life Guardian
 					</Typography>
 					<Typography
@@ -85,7 +85,7 @@ export default function LandingPage({ onLoginSuccess, showLoginFormProp = false,
 						<Button
 							size='large'
 							onClick={handleShowRegister}
-							sx={{ px: 6, py: 2, fontSize: '1.1rem', borderRadius: 3, backgroundColor: 'secondary.main', color: 'black', '&:hover': { backgroundColor: 'secondary.dark' } }}>
+							sx={{ px: 6, py: 2, fontSize: '1.1rem', borderRadius: 3, backgroundColor: 'primary.dark', color: 'white', '&:hover': { backgroundColor: 'secondary.dark' } }}>
 							Sign Up
 						</Button>
 					</Stack>

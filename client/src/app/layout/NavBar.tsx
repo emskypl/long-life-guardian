@@ -23,7 +23,7 @@ export default function NavBar({ isAuthenticated, activeTab, onTabChange, onLogi
 							onClick={onGoHome}
 							sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
 							<MenuItem sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, p: 0 }}>
-								<Shield sx={{ fontSize: { xs: '1.5rem', sm: '2rem' }, color: 'white' }} />
+								<Shield sx={{ fontSize: { xs: '1.5rem', sm: '2rem' }, color: 'secondary.main' }} />
 								<Typography
 									variant='h6'
 									sx={{ fontSize: { xs: '1rem', sm: '1.5rem', md: '2rem' }, color: 'white' }}
@@ -70,7 +70,7 @@ export default function NavBar({ isAuthenticated, activeTab, onTabChange, onLogi
 						)}
 						<Box sx={{ ml: 'auto', display: { xs: 'block', md: 'flex' }, gap: 1 }}>
 							<MenuItem
-							onClick={isAuthenticated ? onLogout : () => onLogin('login')}
+								onClick={isAuthenticated ? onLogout : () => onLogin('login')}
 								sx={{
 									display: showLoginForm ? 'none' : 'block',
 									fontSize: '1rem',
