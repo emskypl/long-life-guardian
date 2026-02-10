@@ -17,6 +17,7 @@
     "@mui/material": "^7.3.4",
     "@mui/x-charts": "^8.27.0",
     "axios": "^1.12.2",
+    "date-fns": "^4.1.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
