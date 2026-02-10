@@ -1,4 +1,4 @@
-using Application.Activities.Queries;
+using Application.Diets.Queries;
 using Application.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;

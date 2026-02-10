@@ -3,7 +3,7 @@ using Domain.Diets;
 using MediatR;
 using Persistence;
 
-namespace Application.Activities.Commands;
+namespace Application.Diets.Commands;
 
 public class CreateDietDay
 {
@@ -16,6 +16,11 @@ public class CreateDietDay
     {
         public async Task<string> Handle(Command request, CancellationToken cancellationToken)
         {
+            if (request.DietDay == null)
+            {
+                throw new ArgumentNullException(nameof(request.DietDay));
+            }
+
             context.DietDays.Add(request.DietDay);
             await context.SaveChangesAsync(cancellationToken);
             return request.DietDay.Id;

@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-namespace Application.Activities.Queries;
+namespace Application.Diets.Queries;
 
 public class GetDietDayForUser
 {
@@ -23,6 +23,7 @@ public class GetDietDayForUser
                                                 .Include(x => x.Dinner!).ThenInclude(m => m.Products)
                                                 .Include(x => x.Snacks!).ThenInclude(m => m.Products)
                                                 .ToListAsync(cancellationToken);
+
             return dietDays ?? throw new Exception("Diet days for user not found");
         }
     }
