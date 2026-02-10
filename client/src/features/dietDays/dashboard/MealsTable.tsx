@@ -4,6 +4,7 @@ import { Fragment, useState } from 'react'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import DietDayDetails from '../details/DietDayDetails'
+import { calculateDayNutrients } from '../../../lib/utils/nutritionCalculations'
 
 type Props = {
 	dietDays: DietDay[]
@@ -88,7 +89,10 @@ export default function MealsTable({ dietDays, openForm, page, rowsPerPage, onPa
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{paginatedDietDays.map(dietDay => (
+					{paginatedDietDays.map(dietDay => {
+						const nutrients = calculateDayNutrients(dietDay)
+						
+						return (
 						<Fragment key={dietDay.id}>
 							<TableRow
 								hover
@@ -161,33 +165,21 @@ export default function MealsTable({ dietDays, openForm, page, rowsPerPage, onPa
 											<Typography
 												variant='body2'
 												color='text.secondary'>
-												{dietDay?.breakfast?.products.reduce((acc, product) => acc + product.carbs, 0) +
-													dietDay?.lunch?.products.reduce((acc, product) => acc + product.carbs, 0) +
-													dietDay?.dinner?.products.reduce((acc, product) => acc + product.carbs, 0) +
-													dietDay?.snacks?.products.reduce((acc, product) => acc + product.carbs, 0)}{' '}
-												/ {dietDay?.carbsTarget}
+												{nutrients.carbs} / {dietDay?.carbsTarget}
 											</Typography>
 										</TableCell>
 										<TableCell align='center'>
 											<Typography
 												variant='body2'
 												color='text.secondary'>
-												{dietDay?.breakfast?.products.reduce((acc, product) => acc + product.protein, 0) +
-													dietDay?.lunch?.products.reduce((acc, product) => acc + product.protein, 0) +
-													dietDay?.dinner?.products.reduce((acc, product) => acc + product.protein, 0) +
-													dietDay?.snacks?.products.reduce((acc, product) => acc + product.protein, 0)}{' '}
-												/ {dietDay?.proteinTarget}
+												{nutrients.protein} / {dietDay?.proteinTarget}
 											</Typography>
 										</TableCell>
 										<TableCell align='center'>
 											<Typography
 												variant='body2'
 												color='text.secondary'>
-												{dietDay?.breakfast?.products.reduce((acc, product) => acc + product.fat, 0) +
-													dietDay?.lunch?.products.reduce((acc, product) => acc + product.fat, 0) +
-													dietDay?.dinner?.products.reduce((acc, product) => acc + product.fat, 0) +
-													dietDay?.snacks?.products.reduce((acc, product) => acc + product.fat, 0)}{' '}
-												/ {dietDay?.fatTarget}
+												{nutrients.fat} / {dietDay?.fatTarget}
 											</Typography>
 										</TableCell>
 									</>
@@ -197,11 +189,7 @@ export default function MealsTable({ dietDays, openForm, page, rowsPerPage, onPa
 										variant='body2'
 										color='text.secondary'
 										sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
-										{dietDay?.breakfast?.products.reduce((acc, product) => acc + product.calories, 0) +
-											dietDay?.lunch?.products.reduce((acc, product) => acc + product.calories, 0) +
-											dietDay?.dinner?.products.reduce((acc, product) => acc + product.calories, 0) +
-											dietDay?.snacks?.products.reduce((acc, product) => acc + product.calories, 0)}{' '}
-										/ {dietDay?.caloriesTarget}
+										{nutrients.calories} / {dietDay?.caloriesTarget}
 									</Typography>
 								</TableCell>
 							</TableRow>
@@ -220,7 +208,7 @@ export default function MealsTable({ dietDays, openForm, page, rowsPerPage, onPa
 								</TableCell>
 							</TableRow>
 						</Fragment>
-					))}
+					)})}
 				</TableBody>
 			</Table>
 			<TablePagination
