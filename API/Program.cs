@@ -7,8 +7,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
 using System.Text;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add Azure Key Vault if running in production
+if (builder.Environment.IsProduction())
+{
+    var keyVaultName = builder.Configuration["KeyVaultName"];
+    if (!string.IsNullOrEmpty(keyVaultName))
+    {
+        var keyVaultUri = new Uri($"https://{keyVaultName}.vault.azure.net/");
+        builder.Configuration.AddAzureKeyVault(keyVaultUri, new DefaultAzureCredential());
+    }
+}
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -39,7 +51,24 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseCors(opt =>
 {
-    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "https://localhost:3000", "http://localhost:3001", "https://localhost:3001");
+    var allowedOrigins = new List<string>
+    {
+        "http://localhost:3000",
+        "https://localhost:3000",
+        "http://localhost:3001",
+        "https://localhost:3001"
+    };
+    
+    // Add Azure Static Web App URL from configuration if present
+    var azureFrontendUrl = builder.Configuration["AzureFrontendUrl"];
+    if (!string.IsNullOrEmpty(azureFrontendUrl))
+    {
+        allowedOrigins.Add(azureFrontendUrl);
+    }
+    
+    opt.AllowAnyHeader()
+       .AllowAnyMethod()
+       .WithOrigins(allowedOrigins.ToArray());
 });
 
 app.UseAuthentication();
