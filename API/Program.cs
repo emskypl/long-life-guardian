@@ -1,6 +1,7 @@
 using API.Extensions;
 using API.Middleware;
 using Application.Core;
+using Domain.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +16,7 @@ builder.Services.AddControllers();
 // Use extension method for application services
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 // JWT Authentication
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"] ?? throw new InvalidOperationException("TokenKey not found")));
@@ -52,8 +54,10 @@ var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<AppDbContext>();
+    var passwordHasher = services.GetRequiredService<IPasswordHasher>();
     await context.Database.MigrateAsync();
-    await DbInitializer.SeedData(context);
+    DbInitializer dbInitializer = new(passwordHasher);
+    await dbInitializer.SeedData(context);
 }
 catch (Exception ex)
 {

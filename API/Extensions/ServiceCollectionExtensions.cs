@@ -1,10 +1,10 @@
 ﻿using Application.Diets.Queries;
 using Application.Common.Behaviors;
-using Application.Common.Services;
 using Application.Core;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Domain.Core;
 
 namespace API.Extensions;
 

@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Core;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace API.Extensions;
 
 public static class DatabaseExtensions
 {
-    public static async Task InitializeDatabaseAsync(this IServiceProvider serviceProvider)
+    public static async Task InitializeDatabaseAsync(this IServiceProvider serviceProvider, IPasswordHasher passwordHasher)
     {
         using var scope = serviceProvider.CreateScope();
         var services = scope.ServiceProvider;
@@ -14,7 +15,8 @@ public static class DatabaseExtensions
         {
             var context = services.GetRequiredService<AppDbContext>();
             await context.Database.MigrateAsync();
-            await DbInitializer.SeedData(context);
+            var dbInitializer = new DbInitializer(passwordHasher);
+            await dbInitializer.SeedData(context);
         }
         catch (Exception ex)
         {

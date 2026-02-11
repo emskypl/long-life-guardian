@@ -4,9 +4,9 @@ using Domain.Login;
 
 namespace Persistence;
 
-public class DbInitializer
+public class DbInitializer(IPasswordHasher passwordHasher)
 {
-    public static async Task SeedData(AppDbContext context)
+    public async Task SeedData(AppDbContext context)
     {
         if (context.DietDays.Any()) return;
 
@@ -181,7 +181,7 @@ public class DbInitializer
         { 
             Id = "test-user-id", 
             Login = "testuser", 
-            Password = PasswordHasher.HashPassword("password123"), 
+            Password = passwordHasher.HashPassword("password123"), 
             Email = "testuser@example.com", 
             Username = "Test User" 
         };

@@ -1,6 +1,6 @@
 using Application.Common.Exceptions;
-using Application.Common.Services;
 using Application.Core;
+using Domain.Core;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
