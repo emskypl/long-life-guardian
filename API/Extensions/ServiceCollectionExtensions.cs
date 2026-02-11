@@ -35,7 +35,7 @@ public static class ServiceCollectionExtensions
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
-        services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+        services.AddAutoMapper(x => x.AddProfile<MappingProfiles>());
         services.AddValidatorsFromAssemblyContaining<GetDietDaysList.Handler>();
 
         // Register application services

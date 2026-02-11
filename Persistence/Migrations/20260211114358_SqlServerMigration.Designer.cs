@@ -11,8 +11,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260206195132_UpdateDietDayWithMealEntities")]
-    partial class UpdateDietDayWithMealEntities
+    [Migration("20260211114358_SqlServerMigration")]
+    partial class SqlServerMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,7 +20,7 @@ namespace Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.3");
 
-            modelBuilder.Entity("Domain.DietDay", b =>
+            modelBuilder.Entity("Domain.Diets.DietDay", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -28,10 +28,10 @@ namespace Persistence.Migrations
                     b.Property<string>("BreakfastId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CaloriesActual")
+                    b.Property<int>("CaloriesTarget")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CaloriesTarget")
+                    b.Property<int>("CarbsTarget")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
@@ -40,13 +40,20 @@ namespace Persistence.Migrations
                     b.Property<string>("DinnerId")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("FatTarget")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("LunchId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Notes")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("ProteinTarget")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("SnacksId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -62,7 +69,21 @@ namespace Persistence.Migrations
                     b.ToTable("DietDays");
                 });
 
-            modelBuilder.Entity("Domain.Meal", b =>
+            modelBuilder.Entity("Domain.Diets.Meal", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Meals");
+                });
+
+            modelBuilder.Entity("Domain.Diets.Product", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -76,6 +97,9 @@ namespace Persistence.Migrations
                     b.Property<int>("Fat")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("MealId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -85,24 +109,52 @@ namespace Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Meals");
+                    b.HasIndex("MealId");
+
+                    b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Domain.DietDay", b =>
+            modelBuilder.Entity("Domain.Login.User", b =>
                 {
-                    b.HasOne("Domain.Meal", "Breakfast")
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Domain.Diets.DietDay", b =>
+                {
+                    b.HasOne("Domain.Diets.Meal", "Breakfast")
                         .WithMany()
                         .HasForeignKey("BreakfastId");
 
-                    b.HasOne("Domain.Meal", "Dinner")
+                    b.HasOne("Domain.Diets.Meal", "Dinner")
                         .WithMany()
                         .HasForeignKey("DinnerId");
 
-                    b.HasOne("Domain.Meal", "Lunch")
+                    b.HasOne("Domain.Diets.Meal", "Lunch")
                         .WithMany()
                         .HasForeignKey("LunchId");
 
-                    b.HasOne("Domain.Meal", "Snacks")
+                    b.HasOne("Domain.Diets.Meal", "Snacks")
                         .WithMany()
                         .HasForeignKey("SnacksId");
 
@@ -113,6 +165,18 @@ namespace Persistence.Migrations
                     b.Navigation("Lunch");
 
                     b.Navigation("Snacks");
+                });
+
+            modelBuilder.Entity("Domain.Diets.Product", b =>
+                {
+                    b.HasOne("Domain.Diets.Meal", null)
+                        .WithMany("Products")
+                        .HasForeignKey("MealId");
+                });
+
+            modelBuilder.Entity("Domain.Diets.Meal", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }
