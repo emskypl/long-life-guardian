@@ -24,7 +24,7 @@ function App() {
 		severity: 'success',
 	})
 
-	const backgroundImage = './public/images/background_2400_1320.jpg'
+	const backgroundImage = '/images/background_2400_1320.jpg'
 
 	// Check for existing user in localStorage on mount
 	useEffect(() => {
