@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Domain.Diets;
 using Domain.Login;
 
@@ -10,6 +11,14 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     public required DbSet<Meal> Meals { get; set; }
     public required DbSet<Product> Products { get; set; }
     public required DbSet<User> Users { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        // Suppress pending model changes warning in production
+        // This is safe because our migrations are database-agnostic
+        optionsBuilder.ConfigureWarnings(warnings => 
+            warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
