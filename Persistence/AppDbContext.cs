@@ -10,4 +10,50 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     public required DbSet<Meal> Meals { get; set; }
     public required DbSet<Product> Products { get; set; }
     public required DbSet<User> Users { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // Configure DietDay relationships
+        modelBuilder.Entity<DietDay>()
+            .HasOne(d => d.Breakfast)
+            .WithMany()
+            .HasForeignKey("BreakfastId")
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<DietDay>()
+            .HasOne(d => d.Lunch)
+            .WithMany()
+            .HasForeignKey("LunchId")
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<DietDay>()
+            .HasOne(d => d.Dinner)
+            .WithMany()
+            .HasForeignKey("DinnerId")
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<DietDay>()
+            .HasOne(d => d.Snacks)
+            .WithMany()
+            .HasForeignKey("SnacksId")
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Configure Meal-Product relationship
+        modelBuilder.Entity<Product>()
+            .HasOne<Meal>()
+            .WithMany(m => m.Products)
+            .HasForeignKey("MealId")
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Configure User indexes
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Login)
+            .IsUnique();
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+    }
 }
