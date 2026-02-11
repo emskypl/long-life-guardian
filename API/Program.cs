@@ -44,6 +44,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Read Azure Frontend URL before building the app
+var allowedOrigins = new List<string>
+{
+    "http://localhost:3000",
+    "https://localhost:3000",
+    "http://localhost:3001",
+    "https://localhost:3001"
+};
+
+var azureFrontendUrl = builder.Configuration["AzureFrontendUrl"];
+if (!string.IsNullOrEmpty(azureFrontendUrl))
+{
+    allowedOrigins.Add(azureFrontendUrl);
+}
+
 var app = builder.Build();
 
 // Add global error handling middleware FIRST
@@ -51,21 +66,6 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseCors(opt =>
 {
-    var allowedOrigins = new List<string>
-    {
-        "http://localhost:3000",
-        "https://localhost:3000",
-        "http://localhost:3001",
-        "https://localhost:3001"
-    };
-    
-    // Add Azure Static Web App URL from configuration if present
-    var azureFrontendUrl = builder.Configuration["AzureFrontendUrl"];
-    if (!string.IsNullOrEmpty(azureFrontendUrl))
-    {
-        allowedOrigins.Add(azureFrontendUrl);
-    }
-    
     opt.AllowAnyHeader()
        .AllowAnyMethod()
        .WithOrigins(allowedOrigins.ToArray());
