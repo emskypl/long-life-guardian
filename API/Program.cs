@@ -30,19 +30,27 @@ builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
-// Configure CORS with allowed origins
-var allowedOrigins = new List<string>
-{
-    "http://localhost:3000",
-    "https://localhost:3000",
-    "http://localhost:3001",
-    "https://localhost:3001"
-};
+// Configure CORS with environment-specific allowed origins
+var allowedOrigins = new List<string>();
 
-var azureFrontendUrl = builder.Configuration["AzureFrontendUrl"];
-if (!string.IsNullOrEmpty(azureFrontendUrl))
+if (builder.Environment.IsDevelopment())
 {
-    allowedOrigins.Add(azureFrontendUrl);
+    allowedOrigins.AddRange(
+    [
+        "http://localhost:3000",
+        "https://localhost:3000",
+        "http://localhost:3001",
+        "https://localhost:3001"
+    ]);
+}
+
+if (builder.Environment.IsProduction())
+{
+    var azureFrontendUrl = builder.Configuration["AzureFrontendUrl"];
+    if (!string.IsNullOrEmpty(azureFrontendUrl))
+    {
+        allowedOrigins.Add(azureFrontendUrl);
+    }
 }
 
 builder.Services.AddCors(options =>
