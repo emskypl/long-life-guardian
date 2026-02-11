@@ -30,21 +30,7 @@ builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
-// JWT Authentication
-var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"] ?? throw new InvalidOperationException("TokenKey not found")));
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(opt =>
-    {
-        opt.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = key,
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-    });
-
-// Read Azure Frontend URL before building the app
+// Configure CORS with allowed origins
 var allowedOrigins = new List<string>
 {
     "http://localhost:3000",
@@ -59,17 +45,38 @@ if (!string.IsNullOrEmpty(azureFrontendUrl))
     allowedOrigins.Add(azureFrontendUrl);
 }
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins(allowedOrigins.ToArray())
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
+// JWT Authentication
+var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"] ?? throw new InvalidOperationException("TokenKey not found")));
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = key,
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
 var app = builder.Build();
 
 // Add global error handling middleware FIRST
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-app.UseCors(opt =>
-{
-    opt.AllowAnyHeader()
-       .AllowAnyMethod()
-       .WithOrigins(allowedOrigins.ToArray());
-});
+// Use the CORS policy
+app.UseCors("AllowSpecificOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -9,6 +9,7 @@ const apiClient = axios.create({
 	headers: {
 		'Content-Type': 'application/json',
 	},
+	withCredentials: true,
 })
 
 // Request interceptor to add auth token
@@ -27,7 +28,7 @@ apiClient.interceptors.request.use(
 		}
 		return config
 	},
-	error => Promise.reject(error)
+	error => Promise.reject(error),
 )
 
 // Response interceptor for error handling
@@ -40,7 +41,7 @@ apiClient.interceptors.response.use(
 			window.location.href = '/'
 		}
 		return Promise.reject(error)
-	}
+	},
 )
 
 export default apiClient
