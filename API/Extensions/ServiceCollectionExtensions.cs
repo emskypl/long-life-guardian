@@ -14,7 +14,17 @@ public static class ServiceCollectionExtensions
     {
         services.AddDbContext<AppDbContext>(opt =>
         {
-            opt.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+            // Use SQL Server in production, SQLite in development
+            if (configuration["ASPNETCORE_ENVIRONMENT"] == "Production")
+            {
+                opt.UseSqlServer(connectionString);
+            }
+            else
+            {
+                opt.UseSqlite(connectionString);
+            }
         });
 
         services.AddCors();
@@ -27,7 +37,7 @@ public static class ServiceCollectionExtensions
 
         services.AddAutoMapper(typeof(MappingProfiles).Assembly);
         services.AddValidatorsFromAssemblyContaining<GetDietDaysList.Handler>();
-        
+
         // Register application services
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 
