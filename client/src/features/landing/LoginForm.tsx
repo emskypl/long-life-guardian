@@ -13,14 +13,15 @@ export default function LoginForm({ onLoginSuccess, initialTab = 'login' }: Prop
 	const [activeTab, setActiveTab] = useState<TabType>(initialTab)
 	const [error, setError] = useState<string>('')
 	const [loading, setLoading] = useState(false)
+	const [passwordError, setPasswordError] = useState<string>('')
+	const [usernameError, setUsernameError] = useState<string>('')
+	const [loginError, setLoginError] = useState<string>('')
 
-	// Login form state
 	const [loginData, setLoginData] = useState({
 		login: '',
 		password: '',
 	})
 
-	// Register form state
 	const [registerData, setRegisterData] = useState({
 		login: '',
 		password: '',
@@ -31,6 +32,36 @@ export default function LoginForm({ onLoginSuccess, initialTab = 'login' }: Prop
 	const handleTabChange = (_event: React.SyntheticEvent, newValue: TabType) => {
 		setActiveTab(newValue)
 		setError('')
+		setPasswordError('')
+		setUsernameError('')
+		setLoginError('')
+	}
+
+	const validatePassword = (password: string): boolean => {
+		if (password.length < 6) {
+			setPasswordError('Password must be at least 6 characters')
+			return false
+		}
+		setPasswordError('')
+		return true
+	}
+
+	const validateUsername = (username: string): boolean => {
+		if (username.length < 3) {
+			setUsernameError('Username must be at least 3 characters')
+			return false
+		}
+		setUsernameError('')
+		return true
+	}
+
+	const validateLogin = (login: string): boolean => {
+		if (login.length < 3) {
+			setLoginError('Login must be at least 3 characters')
+			return false
+		}
+		setLoginError('')
+		return true
 	}
 
 	const handleLogin = async (e: React.FormEvent) => {
@@ -42,6 +73,10 @@ export default function LoginForm({ onLoginSuccess, initialTab = 'login' }: Prop
 			const user = await authAPI.login(loginData)
 			onLoginSuccess(user)
 		} catch (err: any) {
+			if (!validatePassword(registerData.password)) {
+				return
+			}
+
 			const errorMessage = err.response?.data?.error || 'Login failed. Please check your credentials.'
 			setError(errorMessage)
 		} finally {
@@ -52,6 +87,11 @@ export default function LoginForm({ onLoginSuccess, initialTab = 'login' }: Prop
 	const handleRegister = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setError('')
+
+		if (!validateUsername(registerData.username) || !validateLogin(registerData.login) || !validatePassword(registerData.password)) {
+			return
+		}
+
 		setLoading(true)
 
 		try {
@@ -144,7 +184,15 @@ export default function LoginForm({ onLoginSuccess, initialTab = 'login' }: Prop
 						fullWidth
 						required
 						value={registerData.username}
-						onChange={e => setRegisterData({ ...registerData, username: e.target.value })}
+						onChange={e => {
+							setRegisterData({ ...registerData, username: e.target.value })
+							if (usernameError) {
+								validateUsername(e.target.value)
+							}
+						}}
+						onBlur={e => validateUsername(e.target.value)}
+						error={!!usernameError}
+						helperText={usernameError || 'Minimum 3 characters'}
 					/>
 					<TextField
 						label='Login'
@@ -152,7 +200,15 @@ export default function LoginForm({ onLoginSuccess, initialTab = 'login' }: Prop
 						fullWidth
 						required
 						value={registerData.login}
-						onChange={e => setRegisterData({ ...registerData, login: e.target.value })}
+						onChange={e => {
+							setRegisterData({ ...registerData, login: e.target.value })
+							if (loginError) {
+								validateLogin(e.target.value)
+							}
+						}}
+						onBlur={e => validateLogin(e.target.value)}
+						error={!!loginError}
+						helperText={loginError || 'Minimum 3 characters'}
 					/>
 					<TextField
 						label='Email'
@@ -166,18 +222,22 @@ export default function LoginForm({ onLoginSuccess, initialTab = 'login' }: Prop
 					<TextField
 						label='Password'
 						type='password'
-						variant='outlined'
-						fullWidth
-						required
-						value={registerData.password}
-						onChange={e => setRegisterData({ ...registerData, password: e.target.value })}
+						onChange={e => {
+							setRegisterData({ ...registerData, password: e.target.value })
+							if (passwordError) {
+								validatePassword(e.target.value)
+							}
+						}}
+						onBlur={e => validatePassword(e.target.value)}
+						error={!!passwordError}
+						helperText={passwordError || 'Minimum 6 characters'}
 					/>
 					<Button
 						type='submit'
 						variant='contained'
 						size='large'
 						fullWidth
-						disabled={loading}
+						disabled={loading || !!passwordError || !!usernameError || !!loginError}
 						sx={{ mt: 2 }}>
 						{loading ? 'Registering...' : 'Register'}
 					</Button>

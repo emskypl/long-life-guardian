@@ -20,6 +20,6 @@ public class RegisterCommandValidator : AbstractValidator<Register.Command>
 
         RuleFor(x => x.Username)
             .NotEmpty().WithMessage("Username is required")
-            .MinimumLength(2).WithMessage("Username must be at least 2 characters");
+            .MinimumLength(3).WithMessage("Username must be at least 3 characters");
     }
 }

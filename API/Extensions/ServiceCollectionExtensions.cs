@@ -16,7 +16,6 @@ public static class ServiceCollectionExtensions
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            // Use SQL Server in production, SQLite in development
             if (configuration["ASPNETCORE_ENVIRONMENT"] == "Production")
             {
                 opt.UseSqlServer(connectionString);
@@ -38,7 +37,6 @@ public static class ServiceCollectionExtensions
         services.AddAutoMapper(x => x.AddProfile<MappingProfiles>());
         services.AddValidatorsFromAssemblyContaining<GetDietDaysList.Handler>();
 
-        // Register application services
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 
         return services;

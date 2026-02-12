@@ -40,7 +40,6 @@ function App() {
 		}
 	}, [])
 
-	// Fetch diet days when user is authenticated
 	useEffect(() => {
 		if (user) {
 			dietDayAPI
@@ -71,10 +70,8 @@ function App() {
 
 	const handleLoginSuccess = (userData: User) => {
 		setUser(userData)
-		// Store user in localStorage for persistence
 		localStorage.setItem('user', JSON.stringify(userData))
 		showSnackbar(`Welcome, ${userData.username}!`, 'success')
-		// Reset login form state
 		setShowLoginForm({ show: false, activeTab: 'login' })
 	}
 
@@ -84,7 +81,6 @@ function App() {
 		setActiveTab('diets')
 		setDietDays([])
 		setShowLoginForm({ show: false, activeTab: 'login' })
-		// Clear user from localStorage
 		localStorage.removeItem('user')
 		showSnackbar('Logged out successfully', 'success')
 	}
@@ -100,16 +96,13 @@ function App() {
 
 	const handleGoHome = () => {
 		if (!user) {
-			// If not logged in, go back to landing page (hide login form)
 			setShowLoginForm({ show: false, activeTab: 'login' })
 		} else {
-			// If logged in, go to diets tab
 			handleTabChange('diets')
 		}
 	}
 
 	const ensureValidDietDay = (dietDay: DietDay, isUpdate: boolean): Partial<DietDay> => {
-		// Ensure all meals have proper structure with name and products array
 		const ensureValidMeal = (meal: Meal | undefined, defaultName: string): Partial<Meal> => {
 			if (!meal) {
 				return {
@@ -142,10 +135,9 @@ function App() {
 			proteinTarget: typeof dietDay.proteinTarget === 'number' ? dietDay.proteinTarget : 0,
 			carbsTarget: typeof dietDay.carbsTarget === 'number' ? dietDay.carbsTarget : 0,
 			fatTarget: typeof dietDay.fatTarget === 'number' ? dietDay.fatTarget : 0,
-			userId: user?.userId || '', // Ensure userId is included
+			userId: user?.userId || '',
 		}
 
-		// Only include ID when updating
 		if (isUpdate && dietDay.id) {
 			result.id = dietDay.id
 		}
@@ -160,11 +152,9 @@ function App() {
 		console.log('Sending diet day to API:', JSON.stringify(validDietDay, null, 2))
 
 		if (isUpdate) {
-			// Update existing diet day
 			dietDayAPI
 				.update(validDietDay as DietDay)
 				.then(() => {
-					// Re-fetch the updated diet day to ensure we have complete data with IDs
 					return dietDayAPI.getById(dietDay.id)
 				})
 				.then(updatedDietDay => {
@@ -179,11 +169,9 @@ function App() {
 					console.error('Error response:', error.response?.data)
 				})
 		} else {
-			// Create new diet day - don't send ID, backend will generate it
 			dietDayAPI
 				.create(validDietDay)
 				.then(newId => {
-					// Fetch the newly created diet day to get complete data with all IDs
 					return dietDayAPI.getById(newId)
 				})
 				.then(newDietDay => {

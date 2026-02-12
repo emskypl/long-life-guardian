@@ -16,7 +16,6 @@ export default function LandingPage({ onLoginSuccess, showLoginFormProp = false,
 	const [showLoginForm, setShowLoginFormState] = useState(showLoginFormProp)
 	const [initialTab, setInitialTab] = useState<'login' | 'register'>(initialTabFromParent)
 
-	// Update showLoginForm when prop changes
 	useEffect(() => {
 		if (showLoginFormProp) {
 			setShowLoginFormState(true)

@@ -9,7 +9,6 @@ type Props = {
 }
 
 export default function DietDayForm({ dietDay, closeForm, submitForm }: Props) {
-	// Initialize products state for each meal
 	const [breakfastProducts, setBreakfastProducts] = useState<Product[]>(dietDay?.breakfast?.products || [])
 	const [lunchProducts, setLunchProducts] = useState<Product[]>(dietDay?.lunch?.products || [])
 	const [dinnerProducts, setDinnerProducts] = useState<Product[]>(dietDay?.dinner?.products || [])
@@ -287,10 +286,7 @@ export default function DietDayForm({ dietDay, closeForm, submitForm }: Props) {
 
 					{renderMealProducts('snacks', snacksProducts, 'Snacks')}
 				</Box>
-
 				<Divider />
-
-				{/* Form Actions */}
 				<Box
 					display={'flex'}
 					justifyContent={'end'}
