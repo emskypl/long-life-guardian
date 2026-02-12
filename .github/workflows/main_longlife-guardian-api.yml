@@ -7,6 +7,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'API/**'
+      - 'Application/**'
+      - 'Domain/**'
+      - 'Persistence/**'
+      - '*.sln'
+      - '.github/workflows/main_longlife-guardian-api.yml'
   workflow_dispatch:
 
 jobs:
