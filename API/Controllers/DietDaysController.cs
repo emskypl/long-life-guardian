@@ -30,11 +30,10 @@ public class DietDaysController(IMediator mediator) : BaseApiController(mediator
     [HttpPost]
     public async Task<ActionResult<string>> CreateDietDay(CreateDietDayDto dietDayDto)
     {
-        // Extract userId from JWT claims (when authentication is enabled)
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
-        
-        return await Mediator.Send(new CreateDietDay.Command 
-        { 
+
+        return await Mediator.Send(new CreateDietDay.Command
+        {
             DietDay = dietDayDto,
             UserId = userId
         });

@@ -5,7 +5,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class BaseApiController(IMediator mediator) : ControllerBase
+    public abstract class BaseApiController(IMediator mediator) : ControllerBase
     {
         protected IMediator Mediator { get; } = mediator;
     }

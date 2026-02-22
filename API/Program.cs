@@ -1,13 +1,15 @@
 using API.Extensions;
 using API.Middleware;
 using Application.Core;
+using Azure.Identity;
 using Domain.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
 using System.Text;
-using Azure.Identity;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,6 +65,18 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("Fixed", limiterOptions =>
+    {
+        limiterOptions.Window = TimeSpan.FromSeconds(20);
+        limiterOptions.PermitLimit = 5;
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit = 5;
+    });
+});
+
+
 // JWT Authentication
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"] ?? throw new InvalidOperationException("TokenKey not found")));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -84,6 +98,8 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Use the CORS policy
 app.UseCors("AllowSpecificOrigins");
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();

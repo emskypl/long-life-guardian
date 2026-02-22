@@ -103,7 +103,7 @@ export default function DietDayForm({ dietDay, closeForm, submitForm }: Props) {
 			proteinTarget: parseInt(formData.get('proteinTarget') as string) || 0,
 			carbsTarget: parseInt(formData.get('carbsTarget') as string) || 0,
 			fatTarget: parseInt(formData.get('fatTarget') as string) || 0,
-			userId: dietDay?.userId || '', // Maintain userId from existing dietDay
+			userId: dietDay?.userId || '',
 		}
 
 		submitForm(newDietDay)
